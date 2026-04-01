@@ -22,9 +22,7 @@ const fetchEvents = async (groupId: string): Promise<Event[]> => {
 };
 
 // 이벤트 생성
-const createEvent = async (
-  payload: Omit<Event, "id" | "created_at" | "status">,
-) => {
+const createEvent = async (payload: Omit<Event, "id" | "status">) => {
   const { data, error } = await supabase
     .from("events")
     .insert({ ...payload, status: "open" })

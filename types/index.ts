@@ -4,6 +4,14 @@ export type Group = {
   invite_code: string;
 };
 
+export type EventColor =
+  | "blue"
+  | "red"
+  | "green"
+  | "purple"
+  | "orange"
+  | "gray";
+
 export type Event = {
   id: string;
   group_id: string;
@@ -12,6 +20,7 @@ export type Event = {
   end_time: string;
   max_participants: number;
   status: "open" | "closed" | "cancelled";
+  color?: EventColor;
 };
 
 export type Participant = {

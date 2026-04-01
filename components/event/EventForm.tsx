@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useGroupStore } from "@/lib/store/useGroupStore";
 import { useCreateEvent } from "@/hooks/useEvents";
 import { format } from "date-fns";
+import { cn, EVENT_DOT_CLASSES } from "@/lib/utils";
+import { EventColor } from "@/types";
 import Modal from "@/components/common/Modal";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
@@ -22,6 +24,7 @@ export default function EventForm({ groupId, selectedDate, onClose }: Props) {
 
   const [form, setForm] = useState({
     title: "",
+    color: "blue" as EventColor,
     startHour: "20",
     startMin: "00",
     endHour: "22",
@@ -45,6 +48,7 @@ export default function EventForm({ groupId, selectedDate, onClose }: Props) {
       {
         group_id: groupId,
         title: form.title.trim(),
+        color: form.color,
         start_time,
         end_time,
         max_participants: form.maxParticipants,
@@ -70,6 +74,28 @@ export default function EventForm({ groupId, selectedDate, onClose }: Props) {
           placeholder="예) 롤, 발로란트"
           maxLength={20}
         />
+      </div>
+
+      {/* 색상 선택 */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs text-text-secondary">색상</label>
+        <div className="flex justify-between p-2 bg-surface-2 rounded-lg">
+          {["blue", "red", "green", "purple", "orange", "gray"].map((col) => (
+            <Button
+              key={col}
+              variant="ghost"
+              size="sm"
+              className={cn(
+                "w-10 h-10 p-0 rounded-full border-2 shadow-sm transition-all duration-200",
+                form.color === col
+                  ? "border-accent ring-2 ring-accent shadow-lg"
+                  : "border-transparent",
+                EVENT_DOT_CLASSES[col as EventColor],
+              )}
+              onClick={() => setForm({ ...form, color: col as EventColor })}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="flex flex-col gap-1">
