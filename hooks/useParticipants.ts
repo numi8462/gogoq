@@ -52,6 +52,7 @@ const leaveEvent = async ({
     .eq("event_id", eventId)
     .eq("nickname", nickname);
 
+  console.log("leaveEvent error:", error);
   if (error) throw error;
 };
 

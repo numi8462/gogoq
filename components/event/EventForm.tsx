@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useGroupStore } from "@/lib/store/useGroupStore";
 import { useCreateEvent } from "@/hooks/useEvents";
 import { format } from "date-fns";
+import Modal from "@/components/common/Modal";
+import Input from "@/components/common/Input";
+import Button from "@/components/common/Button";
 
 type Props = {
   groupId: string;
@@ -23,8 +26,10 @@ export default function EventForm({ groupId, selectedDate, onClose }: Props) {
     startMin: "00",
     endHour: "22",
     endMin: "00",
-    maxParticipants: 4,
+    maxParticipants: 5,
   });
+
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = () => {
     if (!form.title.trim()) return;
@@ -46,116 +51,95 @@ export default function EventForm({ groupId, selectedDate, onClose }: Props) {
       },
       {
         onSuccess: () => onClose(),
-        onError: (e) => alert(e.message),
+        onError: (e) => setError(e.message),
       },
     );
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl p-6 w-96 flex flex-col gap-4 shadow-lg">
-        {/* 헤더 */}
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-800">일정 추가</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl leading-none"
-          >
-            ×
-          </button>
-        </div>
+    <Modal title="일정 추가" onClose={onClose}>
+      <p className="text-xs text-accent -mt-2">
+        {format(selectedDate, "yyyy년 M월 d일")}
+      </p>
 
-        {/* 날짜 표시 */}
-        <p className="text-sm text-indigo-500 font-medium">
-          {format(selectedDate, "yyyy년 M월 d일")}
-        </p>
+      <div className="flex flex-col gap-1">
+        <label className="text-xs text-text-secondary">게임</label>
+        <Input
+          value={form.title}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+          placeholder="예) 롤, 발로란트"
+          maxLength={20}
+        />
+      </div>
 
-        {/* 게임 이름 */}
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-600">게임</label>
-          <input
-            type="text"
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-            placeholder="예) 롤, 발로란트"
-            maxLength={20}
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm
-                       outline-none focus:border-indigo-400 transition"
+      <div className="flex flex-col gap-1">
+        <label className="text-xs text-text-secondary">시간</label>
+        <div className="flex items-center gap-2">
+          <TimeSelect
+            hour={form.startHour}
+            min={form.startMin}
+            onChangeHour={(v) => setForm({ ...form, startHour: v })}
+            onChangeMin={(v) => setForm({ ...form, startMin: v })}
+          />
+          <span className="text-text-secondary text-sm">~</span>
+          <TimeSelect
+            hour={form.endHour}
+            min={form.endMin}
+            onChangeHour={(v) => setForm({ ...form, endHour: v })}
+            onChangeMin={(v) => setForm({ ...form, endMin: v })}
           />
         </div>
-
-        {/* 시간 설정 */}
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-600">시간</label>
-          <div className="flex items-center gap-2">
-            <TimeSelect
-              hour={form.startHour}
-              min={form.startMin}
-              onChangeHour={(v) => setForm({ ...form, startHour: v })}
-              onChangeMin={(v) => setForm({ ...form, startMin: v })}
-            />
-            <span className="text-gray-400 text-sm">~</span>
-            <TimeSelect
-              hour={form.endHour}
-              min={form.endMin}
-              onChangeHour={(v) => setForm({ ...form, endHour: v })}
-              onChangeMin={(v) => setForm({ ...form, endMin: v })}
-            />
-          </div>
-        </div>
-
-        {/* 최대 인원 */}
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-600">최대 인원</label>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() =>
-                setForm((f) => ({
-                  ...f,
-                  maxParticipants: Math.max(1, f.maxParticipants - 1),
-                }))
-              }
-              className="w-8 h-8 rounded-full border border-gray-200 text-gray-600
-                         hover:bg-gray-50 transition text-lg leading-none"
-            >
-              −
-            </button>
-            <span className="text-sm font-medium w-6 text-center">
-              {form.maxParticipants}
-            </span>
-            <button
-              onClick={() =>
-                setForm((f) => ({
-                  ...f,
-                  maxParticipants: Math.min(10, f.maxParticipants + 1),
-                }))
-              }
-              className="w-8 h-8 rounded-full border border-gray-200 text-gray-600
-                         hover:bg-gray-50 transition text-lg leading-none"
-            >
-              +
-            </button>
-          </div>
-        </div>
-
-        {/* 작성자 */}
-        <p className="text-xs text-gray-400">작성자: {nickname}</p>
-
-        {/* 제출 */}
-        <button
-          onClick={handleSubmit}
-          disabled={!form.title.trim() || isPending}
-          className="bg-indigo-500 text-white rounded-lg py-2.5 text-sm font-medium
-                     hover:bg-indigo-600 transition disabled:opacity-40"
-        >
-          {isPending ? "등록 중..." : "일정 등록"}
-        </button>
       </div>
-    </div>
+
+      <div className="flex flex-col gap-1">
+        <label className="text-xs text-text-secondary">최대 인원</label>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() =>
+              setForm((f) => ({
+                ...f,
+                maxParticipants: Math.max(1, f.maxParticipants - 1),
+              }))
+            }
+          >
+            −
+          </Button>
+          <span className="text-sm font-medium text-text-primary w-6 text-center">
+            {form.maxParticipants}
+          </span>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() =>
+              setForm((f) => ({
+                ...f,
+                maxParticipants: Math.min(10, f.maxParticipants + 1),
+              }))
+            }
+          >
+            +
+          </Button>
+        </div>
+      </div>
+
+      <p className="text-xs text-text-secondary">작성자: {nickname}</p>
+
+      {error && <p className="text-xs text-danger">{error}</p>}
+
+      <Button
+        onClick={handleSubmit}
+        disabled={!form.title.trim()}
+        isLoading={isPending}
+        className="w-full"
+      >
+        일정 등록
+      </Button>
+    </Modal>
   );
 }
 
-// 시간 선택 서브 컴포넌트
 function TimeSelect({
   hour,
   min,
@@ -173,8 +157,7 @@ function TimeSelect({
   const mins = ["00", "30"];
 
   const selectClass =
-    "border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none \
-     focus:border-indigo-400 transition bg-white";
+    "bg-surface-2 border border-[var(--border)] text-text-primary rounded-lg px-2 py-1.5 text-sm outline-none focus:border-accent transition";
 
   return (
     <div className="flex items-center gap-1">
