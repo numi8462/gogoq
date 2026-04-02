@@ -16,16 +16,16 @@ export default function CalendarTile({ date, events }: Props) {
   if (dayEvents.length === 0) return null;
 
   return (
-    <div className="flex flex-col items-start gap-0.5 w-full pt-5 pb-1 absolute">
+    <div className="flex flex-col items-start gap-0.5 w-full pb-1">
       {/* 모바일: 색상 점 */}
-      <div className="flex gap-0.5 sm:hidden">
+      <div className="flex gap-0.5 sm:hidden justify-center">
         {dayEvents.slice(0, 3).map((event) => {
           const col = event.color ?? "gray";
           const bgClass = EVENT_DOT_CLASSES[col] || "bg-accent";
           return (
             <span
               key={event.id}
-              className={`w-1.5 h-1.5 rounded-full ${bgClass}`}
+              className={`w-2.5 h-2.5 rounded-full ${bgClass}`}
             />
           );
         })}
@@ -33,7 +33,7 @@ export default function CalendarTile({ date, events }: Props) {
 
       {/* PC: 최대 3개 뱃지 + 표시 */}
       <div className="hidden sm:flex flex-col gap-0.5 w-full px-0.5">
-        {dayEvents.slice(0, 3).map((event) => (
+        {dayEvents.slice(0, 2).map((event) => (
           <EventBadge key={event.id} event={event} />
         ))}
         {dayEvents.length > 3 && (

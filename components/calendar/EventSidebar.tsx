@@ -30,8 +30,8 @@ export default function EventSidebar({ selectedDate, events, groupId }: Props) {
 
   return (
     <>
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 h-full md:max-h-[calc(100vh-110px)] md:overflow-y-auto event-sidebar-scroll scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 hover:scrollbar-thumb-gray-500">
+        <div className="flex items-center justify-between shrink-0 px-2">
           <h2 className="text-base font-semibold text-gray-100">
             {format(selectedDate, "M월 d일 EEEE", { locale: ko })}
           </h2>
@@ -44,13 +44,15 @@ export default function EventSidebar({ selectedDate, events, groupId }: Props) {
           </button>
         </div>
 
-        {dayEvents.length === 0 ? (
-          <p className="text-sm text-gray-400">이 날 등록된 일정이 없어요</p>
-        ) : (
-          dayEvents.map((event) => (
-            <EventCard key={event.id} event={event} groupId={groupId} />
-          ))
-        )}
+        <div className="flex-1 min-h-0 flex flex-col gap-4">
+          {dayEvents.length === 0 ? (
+            <p className="text-sm text-gray-400">이 날 등록된 일정이 없어요</p>
+          ) : (
+            dayEvents.map((event) => (
+              <EventCard key={event.id} event={event} groupId={groupId} />
+            ))
+          )}
+        </div>
       </div>
 
       {showForm && (

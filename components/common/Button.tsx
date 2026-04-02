@@ -35,7 +35,7 @@ export default function Button({
     <button
       disabled={disabled || isLoading}
       className={cn(
-        "font-medium transition-all disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed",
+        "font-medium transition-all disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed h-10",
         variantClass[variant],
         sizeClass[size],
         className,

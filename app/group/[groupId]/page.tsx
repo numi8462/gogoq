@@ -51,18 +51,18 @@ export default function GroupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen min-w-80 bg-bg">
       <NicknameModal />
 
       {/* 헤더 */}
-      <header className="px-6 py-4 flex items-center justify-between sticky top-0 z-40 backdrop-blur-sm bg-bg/80 border-b border-(--border)">
+      <header className="px-6 py-4 flex items-center justify-between sticky top-0 z-40 backdrop-blur-sm bg-bg/80 border-b border-[rgba(255,255,255,0.08)]">
         <Logo size="sm" />
         {inviteCode && (
           <Button
             variant="ghost"
             size="sm"
             onClick={handleCopy}
-            className="flex"
+            className="flex items-center"
           >
             <Link size={14} className="mr-1.5" />
             {copied ? "복사됨 ✓" : "초대 링크"}
@@ -70,8 +70,10 @@ export default function GroupPage() {
         )}
       </header>
 
-      <main className="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-[1fr_320px] gap-6">
-        <CalendarView events={events} onDateSelect={setSelectedDate} />
+      <main className="max-w-7xl mx-auto p-4 overflow-hidden grid grid-cols-1 md:grid-cols-[1fr_320px] gap-4">
+        <div className="h-full overflow-hidden">
+          <CalendarView events={events} onDateSelect={setSelectedDate} />
+        </div>
         <EventSidebar
           selectedDate={selectedDate}
           events={events}

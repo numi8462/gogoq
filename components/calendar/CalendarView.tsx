@@ -22,7 +22,7 @@ export default function CalendarView({ events, onDateSelect }: Props) {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full overflow-hidden">
       <Calendar
         onChange={handleChange}
         value={selectedDate}

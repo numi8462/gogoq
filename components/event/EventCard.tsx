@@ -66,7 +66,7 @@ export default function EventCard({ event, groupId }: Props) {
   };
 
   return (
-    <div className="rounded-xl border border-[var(--border)] bg-surface p-4 flex flex-col gap-3 transition hover:border-accent/40">
+    <div className="rounded-xl border border-(--border) bg-surface p-3 flex flex-col gap-3 transition hover:border-accent/40">
       {/* 제목 + 상태 뱃지 */}
       <div className="flex items-center justify-between">
         <span className="font-medium text-text-primary">{event.title}</span>
@@ -125,7 +125,7 @@ function ParticipantList({
       <span className="text-xs text-text-secondary">
         {participants.length} / {maxParticipants}명
       </span>
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-1">
         {slots.map((_, i) => {
           const participant = participants[i];
           const isMe = participant?.nickname === currentNickname;
