@@ -10,13 +10,17 @@ import Modal from "@/components/common/Modal";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
 
-type Props = {
+interface EventFormProps {
   groupId: string;
   selectedDate: Date;
   onClose: () => void;
-};
+}
 
-export default function EventForm({ groupId, selectedDate, onClose }: Props) {
+export default function EventForm({
+  groupId,
+  selectedDate,
+  onClose,
+}: EventFormProps) {
   const { nickname } = useGroupStore();
   const { mutate: createEvent, isPending } = useCreateEvent(groupId);
 

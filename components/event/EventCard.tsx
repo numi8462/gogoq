@@ -125,7 +125,7 @@ function ParticipantList({
       <span className="text-xs text-text-secondary">
         {participants.length} / {maxParticipants}명
       </span>
-      <div className="flex flex-wrap gap-1">
+      <div className="flex flex-wrap justify-between">
         {slots.map((_, i) => {
           const participant = participants[i];
           const isMe = participant?.nickname === currentNickname;
