@@ -49,6 +49,12 @@ const updateEvent = async ({
   return data;
 };
 
+// 이벤트 삭제
+const deleteEvent = async (id: string) => {
+  const { error } = await supabase.from("events").delete().eq("id", id);
+  if (error) throw error;
+};
+
 // hooks
 export const useEvents = (groupId: string) => {
   return useQuery({
@@ -75,6 +81,17 @@ export const useUpdateEvent = (groupId: string) => {
 
   return useMutation({
     mutationFn: updateEvent,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: eventKeys.all(groupId) });
+    },
+  });
+};
+
+export const useDeleteEvent = (groupId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteEvent,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: eventKeys.all(groupId) });
     },

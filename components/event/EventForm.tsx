@@ -2,13 +2,18 @@
 
 import { useState } from "react";
 import { useGroupStore } from "@/lib/store/useGroupStore";
-import { useCreateEvent, useUpdateEvent } from "@/hooks/useEvents";
+import {
+  useCreateEvent,
+  useDeleteEvent,
+  useUpdateEvent,
+} from "@/hooks/useEvents";
 import { format } from "date-fns";
 import { cn, EVENT_DOT_CLASSES } from "@/lib/utils";
 import { Event, EventColor } from "@/types";
 import Modal from "@/components/common/Modal";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
+import ConfirmModal from "../ui/ConfirmModal";
 
 interface EventFormProps {
   groupId: string;
@@ -25,11 +30,16 @@ export default function EventForm({
 }: EventFormProps) {
   const isEditMode = !!defaultValues;
 
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const { nickname } = useGroupStore();
   const { mutate: createEvent, isPending: isCreating } =
     useCreateEvent(groupId);
   const { mutate: updateEvent, isPending: isUpdating } =
     useUpdateEvent(groupId);
+  const { mutate: deleteEvent, isPending: isDeleting } =
+    useDeleteEvent(groupId);
+
   const isPending = isCreating || isUpdating;
 
   const dateStr = format(selectedDate, "yyyy-MM-dd");
@@ -96,6 +106,17 @@ export default function EventForm({
     }
   };
 
+  const handleDelete = () => {
+    if (!defaultValues) return;
+    deleteEvent(defaultValues.id, {
+      onSuccess: () => onClose(),
+      onError: (e) => {
+        setShowConfirm(false);
+        setError(e.message);
+      },
+    });
+  };
+
   return (
     <Modal title={isEditMode ? "일정 수정" : "일정 추가"} onClose={onClose}>
       <p className="text-xs text-accent -mt-2">
@@ -122,7 +143,7 @@ export default function EventForm({
               variant="ghost"
               size="sm"
               className={cn(
-                "w-10 h-10 p-0 rounded-full border-2 shadow-sm transition-all duration-200",
+                "w-8 h-8 p-0 rounded-full border-2 shadow-sm transition-all duration-200",
                 form.color === col
                   ? "border-accent ring-2 ring-accent shadow-lg"
                   : "border-transparent",
@@ -136,7 +157,7 @@ export default function EventForm({
 
       <div className="flex flex-col gap-1">
         <label className="text-xs text-text-secondary">시간</label>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <TimeSelect
             hour={form.startHour}
             min={form.startMin}
@@ -198,15 +219,27 @@ export default function EventForm({
       >
         {isEditMode ? "일정 수정" : "일정 등록"}
       </Button>
-      {/* <Button
-        variant="danger"
-        onClick={handleSubmit}
-        disabled={!form.title.trim()}
-        isLoading={isPending}
-        className="w-full"
-      >
-        삭제
-      </Button> */}
+
+      {isEditMode && (
+        <button
+          onClick={() => setShowConfirm(true)}
+          disabled={isPending}
+          className="w-full text-danger hover:text-danger text-sm font-semibold"
+        >
+          삭제
+        </button>
+      )}
+
+      {showConfirm && (
+        <ConfirmModal
+          title="일정 삭제"
+          description={`'${defaultValues?.title}' 일정을 삭제할까요?`}
+          confirmLabel="삭제"
+          isLoading={isDeleting}
+          onConfirm={handleDelete}
+          onClose={() => setShowConfirm(false)}
+        />
+      )}
     </Modal>
   );
 }

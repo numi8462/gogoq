@@ -121,8 +121,6 @@ export default function EventCard({ event, groupId, onEdit }: EventCardProps) {
   );
 }
 
-// ParticipantList 동일
-
 function ParticipantList({
   participants,
   maxParticipants,
