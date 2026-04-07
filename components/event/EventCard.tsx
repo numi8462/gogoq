@@ -12,13 +12,15 @@ import { useGroupStore } from "@/lib/store/useGroupStore";
 import Button from "@/components/common/Button";
 import { cn } from "@/lib/utils";
 import { Event } from "@/types";
+import { Edit } from "lucide-react";
 
-type Props = {
+interface EventCardProps {
   event: Event;
   groupId: string;
-};
+  onEdit?: (event: Event) => void;
+}
 
-export default function EventCard({ event, groupId }: Props) {
+export default function EventCard({ event, groupId, onEdit }: EventCardProps) {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const { nickname } = useGroupStore();
@@ -67,12 +69,22 @@ export default function EventCard({ event, groupId }: Props) {
 
   return (
     <div className="rounded-xl border border-(--border) bg-surface p-3 flex flex-col gap-3 transition hover:border-accent/40">
-      {/* 제목 + 상태 뱃지 */}
+      {/* 제목 + 상태 뱃지 + 수정 버튼 */}
       <div className="flex items-center justify-between">
         <span className="font-medium text-text-primary">{event.title}</span>
-        <span className={cn("text-xs px-2 py-0.5 rounded-full", statusColor)}>
-          {statusLabel}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className={cn("text-xs px-2 py-0.5 rounded-full", statusColor)}>
+            {statusLabel}
+          </span>
+          {onEdit && (
+            <button
+              onClick={() => onEdit(event)}
+              className="text-xs text-text-secondary hover:text-accent transition"
+            >
+              <Edit className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 시간 */}
@@ -109,6 +121,8 @@ export default function EventCard({ event, groupId }: Props) {
   );
 }
 
+// ParticipantList 동일
+
 function ParticipantList({
   participants,
   maxParticipants,
@@ -125,7 +139,7 @@ function ParticipantList({
       <span className="text-xs text-text-secondary">
         {participants.length} / {maxParticipants}명
       </span>
-      <div className="flex flex-wrap justify-between">
+      <div className="flex flex-wrap gap-1">
         {slots.map((_, i) => {
           const participant = participants[i];
           const isMe = participant?.nickname === currentNickname;

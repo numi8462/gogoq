@@ -21,6 +21,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+button {
+  cursor: pointer;
+}
+
 /* react-calendar 커스텀 */
 .react-calendar {
   width: 100% !important;

@@ -33,6 +33,22 @@ const createEvent = async (payload: Omit<Event, "id" | "status">) => {
   return data;
 };
 
+// 이벤트 수정
+const updateEvent = async ({
+  id,
+  ...payload
+}: Partial<Omit<Event, "id">> & { id: string }) => {
+  const { data, error } = await supabase
+    .from("events")
+    .update(payload)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
 // hooks
 export const useEvents = (groupId: string) => {
   return useQuery({
@@ -49,6 +65,17 @@ export const useCreateEvent = (groupId: string) => {
     mutationFn: createEvent,
     onSuccess: () => {
       // 이벤트 생성 후 캐시 무효화 → 자동 리페치
+      queryClient.invalidateQueries({ queryKey: eventKeys.all(groupId) });
+    },
+  });
+};
+
+export const useUpdateEvent = (groupId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateEvent,
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: eventKeys.all(groupId) });
     },
   });

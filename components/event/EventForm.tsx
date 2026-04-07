@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useGroupStore } from "@/lib/store/useGroupStore";
-import { useCreateEvent } from "@/hooks/useEvents";
+import { useCreateEvent, useUpdateEvent } from "@/hooks/useEvents";
 import { format } from "date-fns";
 import { cn, EVENT_DOT_CLASSES } from "@/lib/utils";
-import { EventColor } from "@/types";
+import { Event, EventColor } from "@/types";
 import Modal from "@/components/common/Modal";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
@@ -14,26 +14,49 @@ interface EventFormProps {
   groupId: string;
   selectedDate: Date;
   onClose: () => void;
+  defaultValues?: Event;
 }
 
 export default function EventForm({
   groupId,
   selectedDate,
   onClose,
+  defaultValues,
 }: EventFormProps) {
+  const isEditMode = !!defaultValues;
+
   const { nickname } = useGroupStore();
-  const { mutate: createEvent, isPending } = useCreateEvent(groupId);
+  const { mutate: createEvent, isPending: isCreating } =
+    useCreateEvent(groupId);
+  const { mutate: updateEvent, isPending: isUpdating } =
+    useUpdateEvent(groupId);
+  const isPending = isCreating || isUpdating;
 
   const dateStr = format(selectedDate, "yyyy-MM-dd");
 
-  const [form, setForm] = useState({
-    title: "",
-    color: "blue" as EventColor,
-    startHour: "20",
-    startMin: "00",
-    endHour: "22",
-    endMin: "00",
-    maxParticipants: 5,
+  const [form, setForm] = useState(() => {
+    if (defaultValues) {
+      const start = new Date(defaultValues.start_time);
+      const end = new Date(defaultValues.end_time);
+      return {
+        title: defaultValues.title,
+        color: defaultValues.color,
+        startHour: String(start.getHours()).padStart(2, "0"),
+        startMin: String(start.getMinutes()).padStart(2, "0"),
+        endHour: String(end.getHours()).padStart(2, "0"),
+        endMin: String(end.getMinutes()).padStart(2, "0"),
+        maxParticipants: defaultValues.max_participants,
+      };
+    }
+    return {
+      title: "",
+      color: "blue" as EventColor,
+      startHour: "20",
+      startMin: "00",
+      endHour: "22",
+      endMin: "00",
+      maxParticipants: 5,
+    };
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -48,24 +71,33 @@ export default function EventForm({
       `${dateStr}T${form.endHour}:${form.endMin}:00`,
     ).toISOString();
 
-    createEvent(
-      {
-        group_id: groupId,
-        title: form.title.trim(),
-        color: form.color,
-        start_time,
-        end_time,
-        max_participants: form.maxParticipants,
-      },
-      {
+    const payload = {
+      group_id: groupId,
+      title: form.title.trim(),
+      color: form.color,
+      start_time,
+      end_time,
+      max_participants: form.maxParticipants,
+    };
+
+    if (isEditMode) {
+      updateEvent(
+        { id: defaultValues.id, ...payload },
+        {
+          onSuccess: () => onClose(),
+          onError: (e) => setError(e.message),
+        },
+      );
+    } else {
+      createEvent(payload, {
         onSuccess: () => onClose(),
         onError: (e) => setError(e.message),
-      },
-    );
+      });
+    }
   };
 
   return (
-    <Modal title="일정 추가" onClose={onClose}>
+    <Modal title={isEditMode ? "일정 수정" : "일정 추가"} onClose={onClose}>
       <p className="text-xs text-accent -mt-2">
         {format(selectedDate, "yyyy년 M월 d일")}
       </p>
@@ -164,8 +196,17 @@ export default function EventForm({
         isLoading={isPending}
         className="w-full"
       >
-        일정 등록
+        {isEditMode ? "일정 수정" : "일정 등록"}
       </Button>
+      {/* <Button
+        variant="danger"
+        onClick={handleSubmit}
+        disabled={!form.title.trim()}
+        isLoading={isPending}
+        className="w-full"
+      >
+        삭제
+      </Button> */}
     </Modal>
   );
 }
