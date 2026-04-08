@@ -16,7 +16,7 @@ export default function Modal({ onClose, title, children, className }: Props) {
     >
       <div
         className={cn(
-          "w-full max-w-sm rounded-2xl p-6 flex flex-col gap-4 bg-surface border border-(--border)",
+          "w-full max-w-sm rounded-2xl p-6 flex flex-col gap-4 bg-bg border border-(--border)",
           className,
         )}
       >
@@ -28,7 +28,7 @@ export default function Modal({ onClose, title, children, className }: Props) {
             {onClose && (
               <button
                 onClick={onClose}
-                className="text-text-secondary hover:text-text-primary transition p-1 rounded-lg hover:bg-surface-2 cursor-pointer"
+                className="text-text-primary hover:text-text-primary transition p-1 rounded-lg hover:bg-accent"
               >
                 <X size={16} />
               </button>

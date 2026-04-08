@@ -68,7 +68,7 @@ export default function EventCard({ event, groupId, onEdit }: EventCardProps) {
   };
 
   return (
-    <div className="rounded-xl border border-(--border) bg-surface p-3 flex flex-col gap-3 transition hover:border-accent/40">
+    <div className="rounded-xl border border-(--border) bg-bg p-3 flex flex-col gap-3 transition hover:border-accent/40">
       {/* 제목 + 상태 뱃지 + 수정 버튼 */}
       <div className="flex items-center justify-between">
         <span className="font-medium text-text-primary">{event.title}</span>
@@ -79,7 +79,7 @@ export default function EventCard({ event, groupId, onEdit }: EventCardProps) {
           {onEdit && (
             <button
               onClick={() => onEdit(event)}
-              className="text-xs text-text-secondary hover:text-accent transition"
+              className="text-xs text-white hover:text-accent transition"
             >
               <Edit className="w-4 h-4" />
             </button>
@@ -88,7 +88,7 @@ export default function EventCard({ event, groupId, onEdit }: EventCardProps) {
       </div>
 
       {/* 시간 */}
-      <div className="text-sm text-text-secondary">
+      <div className="text-sm text-white">
         {format(new Date(event.start_time), "HH:mm", { locale: ko })}
         {" ~ "}
         {format(new Date(event.end_time), "HH:mm", { locale: ko })}
@@ -134,7 +134,7 @@ function ParticipantList({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <span className="text-xs text-text-secondary">
+      <span className="text-xs text-white">
         {participants.length} / {maxParticipants}명
       </span>
       <div className="flex flex-wrap gap-1">
@@ -150,8 +150,8 @@ function ParticipantList({
                 participant
                   ? isMe
                     ? "bg-accent text-white border-accent"
-                    : "bg-surface-2 text-text-primary border-(--border)"
-                  : "bg-surface-2 text-text-secondary border-dashed border-(--border)",
+                    : "bg-bg text-text-primary border-(--border)"
+                  : "bg-bg text-white border-dashed border-(--border)",
               )}
             >
               {participant ? participant.nickname : "대기중"}

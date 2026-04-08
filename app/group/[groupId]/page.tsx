@@ -55,7 +55,7 @@ export default function GroupPage() {
       <NicknameModal />
 
       {/* 헤더 */}
-      <header className="px-6 py-4 flex items-center justify-between sticky top-0 z-40 backdrop-blur-sm bg-bg/80 border-b border-[rgba(255,255,255,0.08)]">
+      <header className="px-6 py-2 flex items-center justify-between sticky top-0 z-40 backdrop-blur-sm bg-bg/80 border-b border-[rgba(255,255,255,0.08)]">
         <Logo size="sm" />
         {inviteCode && (
           <Button

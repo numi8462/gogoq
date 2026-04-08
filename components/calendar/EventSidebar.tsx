@@ -47,7 +47,7 @@ export default function EventSidebar({
           </h2>
           <button
             onClick={() => setShowForm(true)}
-            className="text-sm text-indigo-500 hover:text-indigo-700 
+            className="text-sm text-accent hover:text-accent-hover
                        font-medium transition cursor-pointer"
           >
             + 일정 추가

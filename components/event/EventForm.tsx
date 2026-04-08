@@ -136,7 +136,7 @@ export default function EventForm({
       {/* 색상 선택 */}
       <div className="flex flex-col gap-1">
         <label className="text-xs text-text-secondary">색상</label>
-        <div className="flex justify-between p-2 bg-surface-2 rounded-lg">
+        <div className="flex justify-between p-2 bg-bg rounded-lg">
           {["blue", "red", "green", "purple", "orange", "gray"].map((col) => (
             <Button
               key={col}
@@ -261,7 +261,7 @@ function TimeSelect({
   const mins = ["00", "30"];
 
   const selectClass =
-    "bg-surface-2 border border-[var(--border)] text-text-primary rounded-lg px-2 py-1.5 text-sm outline-none focus:border-accent transition";
+    "bg-bg border border-[var(--border)] text-text-primary rounded-lg px-2 py-1.5 text-sm outline-none focus:border-accent transition";
 
   return (
     <div className="flex items-center gap-1">

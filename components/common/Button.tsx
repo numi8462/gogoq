@@ -12,7 +12,7 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 const variantClass: Record<Variant, string> = {
   primary: "bg-accent text-white hover:bg-accent-hover active:scale-[0.98]",
   secondary:
-    "bg-surface-2 text-text-primary border border-[var(--border)] hover:opacity-80 active:scale-[0.98]",
+    "bg-surface-2 text-text-primary border border-[var(--border)] active:scale-[0.98]",
   ghost: "text-text-secondary hover:text-text-primary",
   danger: "bg-danger/10 text-danger hover:bg-danger/20",
 };

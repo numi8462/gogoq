@@ -1,14 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Bangers&display=swap");
+
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0f0f13;
-  --color-surface: #1a1a24;
-  --color-surface-2: #22222e;
-  --color-accent: #7c5cfc;
-  --color-accent-hover: #6b4ef0;
-  --color-text-primary: #f0f0f5;
-  --color-text-secondary: #8888a0;
+  --color-bg: #211f1f;
+  --color-surface: #212121;
+  --color-surface-2: #3e4045;
+  --color-accent: #376c2f;
+  --color-accent-hover: #2e7d32;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #7a7a7a;
   --color-danger: #f87171;
+  --font-bangers: "Bangers", system-ui;
 }
 
 :root {
@@ -16,8 +19,8 @@
 }
 
 body {
-  background-color: #0f0f13;
-  color: #f0f0f5;
+  background-color: #211f1f;
+  color: #f8fafc;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -34,7 +37,7 @@ button {
 }
 
 .react-calendar__navigation button {
-  color: #f0f0f5 !important;
+  color: #f8fafc !important;
   font-size: 14px !important;
   background: transparent !important;
   border-radius: 8px !important;
@@ -46,7 +49,7 @@ button {
 }
 
 .react-calendar__month-view__weekdays__weekday {
-  color: #8888a0 !important;
+  color: #94a3b8 !important;
   font-size: 12px !important;
   font-weight: 500 !important;
 }
@@ -61,7 +64,7 @@ button {
   flex-direction: column !important;
   align-items: center !important;
   padding-top: 8px !important;
-  color: #f0f0f5 !important;
+  color: #f8fafc !important;
   background: transparent !important;
   border-radius: 8px !important;
   font-size: 12px !important;
@@ -71,20 +74,20 @@ button {
 }
 
 .react-calendar__tile:hover {
-  background: #22222e !important;
+  background: #344131 !important;
 }
 
 .react-calendar__tile--now {
-  background: rgba(124, 92, 252, 0.12) !important;
+  background: rgba(8, 234, 125, 0.12) !important;
 }
 
 .react-calendar__tile--active {
-  background: #7c5cfc !important;
+  background: #2e7d32 !important;
   border-radius: 10px !important;
 }
 
 .react-calendar__tile--active:hover {
-  background: #6b4ef0 !important;
+  background: #2e7d32 !important;
 }
 
 .react-calendar__month-view__days__day--neighboringMonth {
