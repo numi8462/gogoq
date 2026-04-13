@@ -51,7 +51,7 @@ export default function HomePage() {
           <Logo size="md" />
           <div>
             <h1 className="text-3xl font-bold text-text-primary leading-tight">
-              바쁜 현대 사회,
+              바쁜 현대 사회
               <br />
               쉽게 게임 일정을 맞추세요
             </h1>
