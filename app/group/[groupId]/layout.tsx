@@ -18,10 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .order("start_time", { ascending: true })
     .limit(3);
 
-  const eventTitles = events?.map((e) => e.title).join(", ");
-  const title = eventTitles
-    ? `${eventTitles} 모집 중`
-    : "게임 같이 할 사람 모집 중";
+  const title = "게임 같이 할 사람 모집 중";
   const description = events?.length
     ? `${events.length}개 일정 모집 중 · gogoq에서 참여하세요`
     : "gogoq에서 게임 일정을 잡아보세요";
