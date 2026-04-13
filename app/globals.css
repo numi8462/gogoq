@@ -1,17 +1,15 @@
-@import url("https://fonts.googleapis.com/css2?family=Bangers&display=swap");
-
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #211f1f;
-  --color-surface: #212121;
-  --color-surface-2: #3e4045;
-  --color-accent: #376c2f;
-  --color-accent-hover: #2e7d32;
+  --color-bg: #021926;
+  --color-surface: #273c47;
+  --color-surface-2: #273c47;
+  --color-accent: #37925f;
+  --color-accent-hover: #1b5e20;
   --color-text-primary: #f8fafc;
   --color-text-secondary: #7a7a7a;
   --color-danger: #f87171;
-  --font-bangers: "Bangers", system-ui;
+  --font-sans: "Pretendard", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
@@ -21,7 +19,9 @@
 body {
   background-color: #211f1f;
   color: #f8fafc;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  /* -webkit-font-smoothing: antialiased; */
+  -moz-osx-font-smoothing: grayscale;
 }
 
 button {
@@ -74,7 +74,7 @@ button {
 }
 
 .react-calendar__tile:hover {
-  background: #344131 !important;
+  background: rgba(8, 234, 125, 0.12) !important;
 }
 
 .react-calendar__tile--now {
