@@ -150,7 +150,7 @@ function ParticipantList({
                 participant
                   ? isMe
                     ? "bg-accent text-white border-accent"
-                    : "bg-bg text-text-primary border-(--border)"
+                    : "bg-blue-400 text-text-primary border-(--border)"
                   : "bg-bg text-white border-dashed border-(--border)",
               )}
             >

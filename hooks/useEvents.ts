@@ -61,6 +61,7 @@ export const useEvents = (groupId: string) => {
     queryKey: eventKeys.all(groupId),
     queryFn: () => fetchEvents(groupId),
     enabled: !!groupId,
+    staleTime: 0,
   });
 };
 
