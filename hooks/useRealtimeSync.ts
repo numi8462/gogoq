@@ -37,18 +37,30 @@ export const useRealtimeSync = (groupId: string) => {
           event: "*",
           schema: "public",
           table: "participants",
+          // filter: `group_id=eq.${groupId}`,
         },
         (payload) => {
+          console.log("participants change:", payload);
+
           // payload에서 event_id 추출
           const eventId =
             (payload.new as { event_id?: string })?.event_id ??
             (payload.old as { event_id?: string })?.event_id;
 
-          if (!eventId) return;
+          queryClient.invalidateQueries({
+            queryKey: ["participants"],
+            refetchType: "all",
+          });
 
           queryClient.invalidateQueries({
-            queryKey: participantKeys.all(eventId),
+            queryKey: ["events", groupId],
           });
+
+          if (eventId) {
+            queryClient.invalidateQueries({
+              queryKey: participantKeys.all(eventId),
+            });
+          }
         },
       )
 
