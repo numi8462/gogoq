@@ -6,6 +6,7 @@ import { Link } from "lucide-react";
 import CalendarView from "@/components/calendar/CalendarView";
 import EventSidebar from "@/components/calendar/EventSidebar";
 import NicknameModal from "@/components/ui/NicknameModal";
+import ChatWidget from "@/components/chat/ChatWidget";
 import Logo from "@/components/common/Logo";
 import Button from "@/components/common/Button";
 import { useEvents } from "@/hooks/useEvents";
@@ -80,6 +81,8 @@ export default function GroupPage() {
           groupId={groupId}
         />
       </main>
+
+      <ChatWidget groupId={groupId} events={events} />
     </div>
   );
 }

@@ -1,28 +1,10 @@
-# Theme Change & Home Redesign TODO
+# Realtime Participant Sync Fix
 
-## Plan Overview
+## Steps:
 
-- New theme: Dark Slate + Teal accent (#0d9488)
-- Update CSS vars, buttons, UI components, home page redesign
-
-## Steps (In Order)
-
-### 1. ✅ Update app/globals.css (Theme vars + calendar styles)
-
-### 2. ✅ Update components/event/EventCard.tsx (accent → teal classes)
-
-### 3. ✅ Update components/common/Input.tsx (focus:border-teal-500)
-
-### 4. ✅ Update components/event/EventForm.tsx (ring-accent → teal)
-
-### 5. ✅ Update components/calendar/CalendarTile.tsx (bg-accent → teal)
-
-### 6. ✅ Redesign app/home/page.tsx (Eye-catching hero)
-
-### 7. 🔄 Search & fix remaining accent usages
-
-### 8. Test: `npm run dev` & visual check
-
-### 9. Update this TODO
-
-Progress: Starting edits...
+- [x] Step 1: Update hooks/useParticipants.ts - Add staleTime: 0 to useQuery and optimistic updates to useJoinEvent/useLeaveEvent
+- [x] Step 2: Add console logging to hooks/useRealtimeSync.ts for debugging subscriptions
+- [x] Step 3: Add staleTime: 0 to useEvents.ts, additional fix
+- [ ] Step 4: Test again in multiple tabs and share console logs
+- [ ] Step 4: Verify Supabase realtime logs if issues persist
+- [ ] Step 5: attempt_completion if working
