@@ -45,7 +45,7 @@ export default function EventCard({ event, groupId, onEdit }: EventCardProps) {
   }[event.status];
 
   const statusColor = {
-    open: "bg-green-500/10 text-green-400",
+    open: "bg-green-500/10 text-green-700 dark:text-green-400",
     closed: "bg-surface-2 text-text-secondary",
     cancelled: "bg-danger/10 text-danger",
   }[event.status];
@@ -79,7 +79,7 @@ export default function EventCard({ event, groupId, onEdit }: EventCardProps) {
           {onEdit && (
             <button
               onClick={() => onEdit(event)}
-              className="text-xs text-white hover:text-accent transition"
+              className="text-xs text-text-secondary hover:text-accent transition"
             >
               <Edit className="w-4 h-4" />
             </button>
@@ -88,7 +88,7 @@ export default function EventCard({ event, groupId, onEdit }: EventCardProps) {
       </div>
 
       {/* 시간 */}
-      <div className="text-sm text-white">
+      <div className="text-sm text-text-primary">
         {format(new Date(event.start_time), "HH:mm", { locale: ko })}
         {" ~ "}
         {format(new Date(event.end_time), "HH:mm", { locale: ko })}
@@ -134,7 +134,7 @@ function ParticipantList({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <span className="text-xs text-white">
+      <span className="text-xs text-text-secondary">
         {participants.length} / {maxParticipants}명
       </span>
       <div className="flex flex-wrap gap-1">
@@ -151,7 +151,7 @@ function ParticipantList({
                   ? isMe
                     ? "bg-accent text-white border-accent"
                     : "bg-blue-400 text-text-primary border-(--border)"
-                  : "bg-bg text-white border-dashed border-(--border)",
+                  : "bg-bg text-text-secondary border-dashed border-(--border)",
               )}
             >
               {participant ? participant.nickname : "대기중"}

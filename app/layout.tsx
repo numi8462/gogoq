@@ -1,6 +1,9 @@
 import "./globals.css";
 import Providers from "./providers";
+import ThemeToggle from "@/components/common/ThemeToggle";
 import type { Metadata } from "next";
+
+const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.classList.add(t);}}catch(e){}})();`;
 
 export const metadata: Metadata = {
   title: {
@@ -34,8 +37,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body>
         <Providers>{children}</Providers>
+        <ThemeToggle />
       </body>
     </html>
   );

@@ -1,24 +1,75 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #021926;
-  --color-surface: #273c47;
-  --color-surface-2: #273c47;
-  --color-accent: #37925f;
-  --color-accent-hover: #1b5e20;
-  --color-text-primary: #f8fafc;
-  --color-text-secondary: #7a7a7a;
-  --color-danger: #f87171;
+  --color-bg: #f7f7f5;
+  --color-surface: #ffffff;
+  --color-surface-2: #eaeae6;
+  --color-accent: #ff4696;
+  --color-accent-hover: #e0257a;
+  --color-accent-secondary: #ff6b4a;
+  --color-tile-default: #eaeae6;
+  --color-tile-scheduled: #dce6dd;
+  --color-text-primary: #1c1d22;
+  --color-text-secondary: #6b6d76;
+  --color-danger: #dc2626;
   --font-sans: "Pretendard", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --border: rgba(255, 255, 255, 0.08);
+  --border: #e3e3df;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #1e1033;
+    --color-surface: #1f1f24;
+    --color-surface-2: #232328;
+    --color-accent: #ff4696;
+    --color-accent-hover: #ff74b0;
+    --color-accent-secondary: #ff8a6b;
+    --color-tile-default: #232328;
+    --color-tile-scheduled: #213329;
+    --color-text-primary: #f2f2f0;
+    --color-text-secondary: #9a9ca5;
+    --color-danger: #f87171;
+    --border: #2a2a30;
+  }
+}
+
+/* 수동 토글 오버라이드 — 시스템 설정보다 우선 적용 (JS가 <html>에 클래스로 표시) */
+html.light {
+  --color-bg: #f7f7f5;
+  --color-surface: #ffffff;
+  --color-surface-2: #eaeae6;
+  --color-accent: #ff4696;
+  --color-accent-hover: #e0257a;
+  --color-accent-secondary: #ff6b4a;
+  --color-tile-default: #eaeae6;
+  --color-tile-scheduled: #dce6dd;
+  --color-text-primary: #1c1d22;
+  --color-text-secondary: #6b6d76;
+  --color-danger: #dc2626;
+  --border: #e3e3df;
+}
+
+html.dark {
+  --color-bg: #1e1033;
+  --color-surface: #1f1f24;
+  --color-surface-2: #232328;
+  --color-accent: #ff4696;
+  --color-accent-hover: #ff74b0;
+  --color-accent-secondary: #ff8a6b;
+  --color-tile-default: #232328;
+  --color-tile-scheduled: #213329;
+  --color-text-primary: #f2f2f0;
+  --color-text-secondary: #9a9ca5;
+  --color-danger: #f87171;
+  --border: #2a2a30;
 }
 
 body {
-  background-color: #211f1f;
-  color: #f8fafc;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
   font-family: var(--font-sans);
   /* -webkit-font-smoothing: antialiased; */
   -moz-osx-font-smoothing: grayscale;
@@ -37,7 +88,7 @@ button {
 }
 
 .react-calendar__navigation button {
-  color: #f8fafc !important;
+  color: var(--color-text-primary) !important;
   font-size: 14px !important;
   background: transparent !important;
   border-radius: 8px !important;
@@ -45,11 +96,11 @@ button {
 }
 
 .react-calendar__navigation button:hover {
-  background: #22222e !important;
+  background: var(--color-surface-2) !important;
 }
 
 .react-calendar__month-view__weekdays__weekday {
-  color: #94a3b8 !important;
+  color: var(--color-text-secondary) !important;
   font-size: 12px !important;
   font-weight: 500 !important;
 }
@@ -64,7 +115,7 @@ button {
   flex-direction: column !important;
   align-items: center !important;
   padding-top: 8px !important;
-  color: #f8fafc !important;
+  color: var(--color-text-primary) !important;
   background: transparent !important;
   border-radius: 8px !important;
   font-size: 12px !important;
@@ -74,25 +125,26 @@ button {
 }
 
 .react-calendar__tile:hover {
-  background: rgba(8, 234, 125, 0.12) !important;
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent) !important;
 }
 
 .react-calendar__tile--now {
-  background: rgba(8, 234, 125, 0.12) !important;
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent) !important;
 }
 
 .react-calendar__tile--active {
-  background: #2e7d32 !important;
+  background: var(--color-accent) !important;
+  color: #ffffff !important;
   border-radius: 10px !important;
 }
 
 .react-calendar__tile--active:hover {
-  background: #2e7d32 !important;
+  background: var(--color-accent) !important;
 }
 
 .react-calendar__month-view__days__day--neighboringMonth {
-  color: #8888a0 !important;
-  opacity: 0.4 !important;
+  color: var(--color-text-secondary) !important;
+  opacity: 0.5 !important;
 }
 
 .react-calendar__tileContent {
@@ -130,21 +182,22 @@ button {
   }
 
   .event-sidebar-scroll::-webkit-scrollbar-track {
-    background: rgba(26, 26, 36, 0.5);
+    background: var(--color-surface-2);
     border-radius: 2px;
   }
 
   .event-sidebar-scroll::-webkit-scrollbar-thumb {
-    background: #4b5563;
+    background: color-mix(in srgb, var(--color-text-secondary) 50%, transparent);
     border-radius: 2px;
   }
 
   .event-sidebar-scroll::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
+    background: color-mix(in srgb, var(--color-text-secondary) 70%, transparent);
   }
 
   .event-sidebar-scroll {
     scrollbar-width: thin;
-    scrollbar-color: #4b5563 rgba(26, 26, 36, 0.5);
+    scrollbar-color: color-mix(in srgb, var(--color-text-secondary) 50%, transparent)
+      var(--color-surface-2);
   }
 }

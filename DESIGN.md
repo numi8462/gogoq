@@ -51,8 +51,9 @@ Tailwind에서는 `tailwind.config`의 `theme.extend.colors`에 위 키값 그�
 
 **확인 필요**
 
-- [ ] 다크모드 전환 방식: 토글 버튼(수동, localStorage 저장) vs 시스템 설정
-      자동 감지(`prefers-color-scheme`) vs 둘 다 지원 — 하나만 만든다면 어느 쪽?
+- [x] 다크모드 전환 방식: 시스템 설정 자동 감지(`prefers-color-scheme`)로 결정.
+      `app/globals.css`에서 같은 CSS 커스텀 프로퍼티를 `@media (prefers-color-scheme: dark)`
+      블록에서 재정의하는 방식으로 구현 (토글 버튼/localStorage 없음).
 
 ---
 

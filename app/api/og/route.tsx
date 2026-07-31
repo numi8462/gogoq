@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
       style={{
         width: "1200px",
         height: "630px",
-        background: "#021926",
+        background: "#1e1033",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
           height: "500px",
           borderRadius: "50%",
           background:
-            "radial-gradient(ellipse, rgba(55,146,95,0.25) 0%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(255,70,150,0.25) 0%, transparent 70%)",
         }}
       />
 
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
             width: "48px",
             height: "48px",
             borderRadius: "12px",
-            background: "#37925f",
+            background: "#ff4696",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
           Q
         </div>
         <span
-          style={{ color: "#f0f0f5", fontSize: "32px", fontWeight: "bold" }}
+          style={{ color: "#f2f2f0", fontSize: "32px", fontWeight: "bold" }}
         >
           gogoQ
         </span>
@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
       {/* 메인 타이틀 */}
       <div
         style={{
-          color: "#f0f0f5",
+          color: "#f2f2f0",
           fontSize: title.length > 20 ? "40px" : "52px",
           fontWeight: "bold",
           textAlign: "center",
@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
       {/* 서브 텍스트 */}
       <div
         style={{
-          color: "#8888a0",
+          color: "#9a9ca5",
           fontSize: "24px",
           textAlign: "center",
         }}
@@ -103,7 +103,7 @@ export async function GET(req: NextRequest) {
           right: "0",
           height: "4px",
           background:
-            "linear-gradient(90deg, transparent, #37925f, transparent)",
+            "linear-gradient(90deg, transparent, #ff4696, transparent)",
         }}
       />
     </div>,
