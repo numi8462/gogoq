@@ -2,6 +2,15 @@ export type Group = {
   id: string;
   created_at: string;
   invite_code: string;
+  name: string | null;
+  creator_id: string | null;
+};
+
+export type GroupMember = {
+  id: string;
+  group_id: string;
+  user_id: string;
+  joined_at: string;
 };
 
 export type EventColor =
