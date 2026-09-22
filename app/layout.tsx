@@ -1,6 +1,7 @@
 import "./globals.css";
 import Providers from "./providers";
 import ThemeToggle from "@/components/common/ThemeToggle";
+import Toaster from "@/components/common/Toaster";
 import type { Metadata } from "next";
 
 const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.classList.add(t);}}catch(e){}})();`;
@@ -43,6 +44,7 @@ export default function RootLayout({
       <body>
         <Providers>{children}</Providers>
         <ThemeToggle />
+        <Toaster />
       </body>
     </html>
   );
