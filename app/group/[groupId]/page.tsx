@@ -2,38 +2,54 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Link } from "lucide-react";
+import { Link, Pencil } from "lucide-react";
 import CalendarView from "@/components/calendar/CalendarView";
 import EventSidebar from "@/components/calendar/EventSidebar";
 import NicknameModal from "@/components/ui/NicknameModal";
 import ChatWidget from "@/components/chat/ChatWidget";
+import EditGroupNameModal from "@/components/group/EditGroupNameModal";
 import Logo from "@/components/common/Logo";
 import Button from "@/components/common/Button";
 import { useEvents } from "@/hooks/useEvents";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
+import { useUser } from "@/hooks/useUser";
+import { recordGroupVisit } from "@/hooks/useMyGroups";
 import { createClient } from "@/lib/supabase/client";
 
 export default function GroupPage() {
   const { groupId } = useParams<{ groupId: string }>();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [inviteCode, setInviteCode] = useState("");
+  const [groupName, setGroupName] = useState<string | null>(null);
+  const [creatorId, setCreatorId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
 
   const { data: events = [], isLoading } = useEvents(groupId);
   useRealtimeSync(groupId);
+  const { user } = useUser();
 
   useEffect(() => {
-    const fetchInviteCode = async () => {
+    const fetchGroup = async () => {
       const supabase = createClient();
       const { data } = await supabase
         .from("groups")
-        .select("invite_code")
+        .select("invite_code, name, creator_id")
         .eq("id", groupId)
         .single();
-      if (data) setInviteCode(data.invite_code);
+      if (data) {
+        setInviteCode(data.invite_code);
+        setGroupName(data.name);
+        setCreatorId(data.creator_id);
+      }
     };
-    fetchInviteCode();
+    fetchGroup();
   }, [groupId]);
+
+  // 로그인 사용자가 그룹을 방문하면 "참여한 방"으로 자동 기록
+  useEffect(() => {
+    if (user) recordGroupVisit(groupId, user.id).catch(() => {});
+  }, [groupId, user]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(
@@ -57,13 +73,32 @@ export default function GroupPage() {
 
       {/* 헤더 */}
       <header className="px-6 py-2 flex items-center justify-between sticky top-0 z-40 backdrop-blur-sm bg-bg/80 border-b border-(--border)">
-        <Logo size="sm" />
+        <div className="flex items-center gap-2 min-w-0">
+          <Logo size="sm" />
+          {groupName && (
+            <>
+              <span className="text-text-secondary text-sm">·</span>
+              <p className="text-sm font-medium text-text-primary truncate">
+                {groupName}
+              </p>
+            </>
+          )}
+          {user && creatorId === user.id && (
+            <button
+              onClick={() => setIsEditingName(true)}
+              aria-label="그룹 이름 수정"
+              className="text-text-secondary hover:text-text-primary p-1 rounded-lg hover:bg-accent transition shrink-0"
+            >
+              <Pencil size={12} />
+            </button>
+          )}
+        </div>
         {inviteCode && (
           <Button
             variant="ghost"
             size="sm"
             onClick={handleCopy}
-            className="flex items-center"
+            className="flex items-center shrink-0"
           >
             <Link size={14} className="mr-1.5" />
             {copied ? "복사됨 ✓" : "초대 링크"}
@@ -83,6 +118,15 @@ export default function GroupPage() {
       </main>
 
       <ChatWidget groupId={groupId} events={events} />
+
+      {isEditingName && (
+        <EditGroupNameModal
+          groupId={groupId}
+          currentName={groupName ?? ""}
+          onClose={() => setIsEditingName(false)}
+          onSaved={setGroupName}
+        />
+      )}
     </div>
   );
 }

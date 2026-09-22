@@ -5,19 +5,36 @@ import { useRouter } from "next/navigation";
 import Logo from "@/components/common/Logo";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, LogOut } from "lucide-react";
+import { useUser } from "@/hooks/useUser";
+import { useMyGroups } from "@/hooks/useMyGroups";
+import { createClient } from "@/lib/supabase/client";
 
 export default function HomePage() {
   const router = useRouter();
+  const { user, isLoading: isUserLoading } = useUser();
+  const { data: myGroups = [] } = useMyGroups(user?.id);
   const [isLoading, setIsLoading] = useState(false);
+  const [groupName, setGroupName] = useState("");
   const [inviteInput, setInviteInput] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.refresh();
+  };
+
   const handleCreate = async () => {
+    if (!groupName.trim()) return;
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/groups", { method: "POST" });
+      const res = await fetch("/api/groups", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: groupName.trim() }),
+      });
       const { data, error } = await res.json();
       if (error) throw new Error(error);
       router.push(`/group/${data.id}`);
@@ -44,7 +61,25 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen bg-bg flex flex-col items-center justify-center px-4">
+    <main className="min-h-screen bg-bg flex flex-col items-center justify-center px-4 py-10">
+      {/* 로그인 상태 */}
+      <div className="fixed top-4 right-4 z-40">
+        {!isUserLoading &&
+          (user ? (
+            <Button
+              size="sm"
+              onClick={handleLogout}
+              className="flex items-center gap-1"
+            >
+              <LogOut size={12} /> 로그아웃
+            </Button>
+          ) : (
+            <Button size="sm" onClick={() => router.push("/login")}>
+              로그인
+            </Button>
+          ))}
+      </div>
+
       <div className="relative w-full max-w-md flex flex-col gap-6">
         {/* 로고 */}
         <div className="text-center flex flex-col items-center gap-10 mb-2">
@@ -61,6 +96,27 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* 참여한 방 (로그인 시에만) */}
+        {user && myGroups.length > 0 && (
+          <div className="rounded-2xl p-5 flex flex-col gap-3 bg-surface/50 border border-(--border)">
+            <p className="text-sm font-semibold text-text-primary">
+              참여한 방
+            </p>
+            <div className="flex flex-col gap-2">
+              {myGroups.map((g) => (
+                <button
+                  key={g.id}
+                  onClick={() => router.push(`/group/${g.id}`)}
+                  className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm bg-accent text-white hover:bg-accent-hover transition text-left"
+                >
+                  {g.name || "이름 없는 그룹"}
+                  <ArrowRight className="h-3 w-3 shrink-0" />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* 새 그룹 만들기 */}
         <div className="rounded-2xl p-5 flex flex-col gap-3 bg-surface/50 border border-(--border)">
           <div>
@@ -71,8 +127,16 @@ export default function HomePage() {
               초대 링크를 공유하면 친구들이 바로 참여해요
             </p>
           </div>
+          <Input
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleCreate()}
+            placeholder="그룹 이름 (예: 고고큐 친구들)"
+            maxLength={30}
+          />
           <Button
             onClick={handleCreate}
+            disabled={!groupName.trim()}
             isLoading={isLoading}
             className="w-full flex items-center justify-center gap-1"
           >
