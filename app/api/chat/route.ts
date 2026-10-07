@@ -1,24 +1,17 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
-import { format, isValid, parseISO } from "date-fns";
 import { EVENT_COLORS } from "@/lib/utils";
-import { formatDateForCompare, resolveRelativeDate } from "@/lib/resolveRelativeDate";
+import {
+  eventToFields,
+  validateDate,
+  type EventSummary,
+} from "@/lib/chatSchedule";
 
 const WEEKDAY_KO = ["일", "월", "화", "수", "목", "금", "토"];
 
 type ChatTurn = {
   role: "user" | "assistant";
   content: string;
-};
-
-type EventSummary = {
-  id: string;
-  title: string;
-  start_time: string;
-  end_time: string;
-  max_participants: number;
-  color?: string;
-  status: string;
 };
 
 type ScheduleFields = {
@@ -119,19 +112,6 @@ const deleteScheduleTool: Anthropic.Tool = {
   strict: true,
 };
 
-function eventToFields(event: EventSummary) {
-  const start = new Date(event.start_time);
-  const end = new Date(event.end_time);
-  return {
-    title: event.title,
-    date: format(start, "yyyy-MM-dd"),
-    start_time: format(start, "HH:mm"),
-    end_time: format(end, "HH:mm"),
-    max_participants: event.max_participants,
-    color: (event.color ?? "blue") as (typeof EVENT_COLORS)[number],
-  };
-}
-
 function buildEventListLabel(events: EventSummary[]) {
   if (events.length === 0) return "현재 그룹에 등록된 일정이 없다.";
   return events
@@ -170,29 +150,6 @@ ${buildEventListLabel(events)}
 - 위 세 도구 외의 방법(텍스트로 "수정했어요", "삭제했어요" 등)으로 실제 처리가 끝난 것처럼 말하지 마라 — 실제 반영은 사용자가 확인 카드에서 승인해야만 이루어진다.
 - 날짜는 위 현재 시각을 기준으로 계산해라. "다음주 금요일", "내일" 같은 상대적 표현을 사용했다면 relative_expression 필드에 그 원문을 그대로 채워라. 상대 표현이 없었다면 빈 문자열로 두거나(생성 시) 필드 자체를 생략해라(수정 시).
 - 절대 자유 텍스트로 날짜/시간을 지어내지 말고, 항상 도구의 필드 형식(YYYY-MM-DD, HH:mm)을 지켜라.`;
-}
-
-function validateDate(
-  date: string,
-  relativeExpression: string | undefined,
-  nowISO: string,
-): { date: string; corrected: boolean } | null {
-  const parsed = parseISO(date);
-  if (!isValid(parsed)) return null;
-
-  let result = date;
-  let corrected = false;
-  if (relativeExpression?.trim()) {
-    const resolved = resolveRelativeDate(relativeExpression, new Date(nowISO));
-    if (resolved) {
-      const resolvedStr = formatDateForCompare(resolved);
-      if (resolvedStr !== date) {
-        result = resolvedStr;
-        corrected = true;
-      }
-    }
-  }
-  return { date: result, corrected };
 }
 
 export async function POST(req: Request) {
