@@ -9,6 +9,7 @@ import KakaoIcon from "@/components/common/KakaoIcon";
 import { createClient } from "@/lib/supabase/client";
 import { useToastStore } from "@/lib/store/useToastStore";
 import { translateAuthError } from "@/lib/authErrors";
+import { isValidEmail } from "@/lib/validateEmail";
 import type { AuthError } from "@supabase/supabase-js";
 
 type Mode = "signin" | "signup";
@@ -37,7 +38,11 @@ export default function LoginPage() {
 
   const validate = () => {
     const errors: FieldErrors = {};
-    if (!email.trim()) errors.email = "이메일을 입력해주세요.";
+    if (!email.trim()) {
+      errors.email = "이메일을 입력해주세요.";
+    } else if (!isValidEmail(email)) {
+      errors.email = "올바른 이메일 형식이 아니에요.";
+    }
     if (!password.trim()) errors.password = "비밀번호를 입력해주세요.";
     if (mode === "signup") {
       if (!confirmPassword.trim()) {
@@ -65,16 +70,22 @@ export default function LoginPage() {
       setIsLoading(false);
       if (error) return applyAuthError(error);
 
-      // 이메일 확인이 켜져 있으면 세션 없이 가입만 됨 → 로그인 화면으로 전환
-      if (!data.session) {
-        showToast("가입 확인 이메일을 보냈어요. 메일함을 확인해주세요.");
-        setMode("signin");
-        setPassword("");
-        setConfirmPassword("");
-        return;
+      // Supabase 프로젝트 설정(이메일 확인 끄기)에 따라 signUp이 바로 세션을
+      // 돌려줄 수 있는데, 그 경우에도 자동 로그인시키지 않는다. 회원가입과
+      // 로그인은 분리된 절차여야 하므로, 세션이 생겼다면 바로 로그아웃시키고
+      // 사용자가 직접 로그인하게 한다.
+      if (data.session) {
+        await supabase.auth.signOut();
       }
-      showToast("회원가입됐어요!");
-      router.push("/home");
+
+      showToast(
+        data.session
+          ? "회원가입됐어요! 로그인해주세요."
+          : "가입 확인 이메일을 보냈어요. 메일함을 확인한 뒤 로그인해주세요.",
+      );
+      setMode("signin");
+      setPassword("");
+      setConfirmPassword("");
       return;
     }
 
