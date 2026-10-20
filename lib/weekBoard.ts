@@ -159,21 +159,14 @@ export function formatEventTime(event: BoardEvent): string {
   return `${formatTime(event.start)}~${formatTime(event.end)}`;
 }
 
-/**
- * 보드 아래 한 줄 안내 문구.
- * emptyHint는 일정이 하나도 없을 때 다음 행동을 알려주는 문장. 홈과 그룹 페이지에서 할 수 있는 일이 달라 바꿔 쓴다.
- */
-export function getBoardCaption(
-  model: WeekBoardModel,
-  isDemo: boolean,
-  emptyHint = "방에서 일정을 잡아보세요.",
-): string {
+/** 보드 아래 한 줄 안내 문구 */
+export function getBoardCaption(model: WeekBoardModel, isDemo: boolean): string {
   if (isDemo) {
     return "예시 화면이에요. 그룹을 만들고 일정을 잡으면 이번 주 모임이 이렇게 보여요.";
   }
 
   const next = model.nextEvent;
-  if (!next) return `이번 주는 비어있어요. ${emptyHint}`;
+  if (!next) return "이번 주는 비어있어요. 방에서 일정을 잡아보세요.";
 
   const time = formatTime(next.start);
   if (model.targetIndex === null) {

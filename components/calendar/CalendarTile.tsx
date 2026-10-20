@@ -1,47 +1,25 @@
 import { Event } from "@/types";
 import EventBadge from "./EventBadge";
-import { EVENT_DOT_CLASSES } from "@/lib/utils";
-import { isSameDay } from "date-fns";
 
 type Props = {
-  date: Date;
+  /** 이 날짜의 일정. 캘린더가 날짜별로 미리 나눠서 넘긴다. */
   events: Event[];
 };
 
-export default function CalendarTile({ date, events }: Props) {
-  const dayEvents = events.filter((e) =>
-    isSameDay(new Date(e.start_time), date),
-  );
-
-  if (dayEvents.length === 0) return null;
+/**
+ * 날짜 칸 안의 일정 제목 배지. PC에서만 2개까지 보여준다.
+ * 일정 개수는 날짜 옆 깃발(EventFlags)이 알려주므로, 모바일에서는 깃발만 둔다.
+ */
+export default function CalendarTile({ events }: Props) {
+  if (events.length === 0) return null;
 
   return (
-    <div className="flex flex-col items-start gap-0.5 w-full pb-1">
-      {/* 모바일: 색상 점 */}
-      <div className="flex gap-0.5 sm:hidden justify-center">
-        {dayEvents.slice(0, 3).map((event) => {
-          const col = event.color ?? "gray";
-          const bgClass = EVENT_DOT_CLASSES[col] || "bg-teal-500";
-          return (
-            <span
-              key={event.id}
-              className={`w-2.5 h-2.5 rounded-full ${bgClass}`}
-            />
-          );
-        })}
-      </div>
-
-      {/* PC: 최대 3개 뱃지 + 표시 */}
-      <div className="hidden sm:flex flex-col gap-0.5 w-full px-0.5">
-        {dayEvents.slice(0, 2).map((event) => (
-          <EventBadge key={event.id} event={event} />
-        ))}
-        {dayEvents.length > 2 && (
-          <span className="text-xs text-text-secondary leading-tight text-center py-0.5 rounded bg-surface-2">
-            +{dayEvents.length - 2}개 더
-          </span>
-        )}
-      </div>
+    <div className="hidden w-full flex-col gap-0.5 sm:flex">
+      {events.slice(0, 2).map((event) => (
+        <div key={event.id} data-event-id={event.id} className="w-full">
+          <EventBadge event={event} />
+        </div>
+      ))}
     </div>
   );
 }

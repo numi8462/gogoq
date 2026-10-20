@@ -24,15 +24,6 @@ type Props = {
   /** WebGL을 쓸 수 있을 때만 3D 장면을 띄운다. 아니면 정적인 돌이 계속 보인다. */
   show3D: boolean;
   captionOverride?: string;
-  /** 일정이 하나도 없을 때 안내 문구 뒤에 붙는 다음 행동 */
-  emptyHint?: string;
-  /**
-   * 주면 돌을 눌렀을 때 자체 일정 패널을 열지 않고 이 콜백으로 칸 번호를 넘긴다.
-   * 그룹 페이지처럼 바깥(캘린더, 일정 목록)이 선택 날짜를 관리할 때 쓴다.
-   */
-  onDaySelect?: (index: number) => void;
-  /** onDaySelect를 쓸 때 바깥에서 선택된 칸. 이번 주 밖의 날짜면 null */
-  selectedIndex?: number | null;
 };
 
 // 3D 장면 대신 보여주는 정적인 돌. 장면을 불러오는 동안과 WebGL을 못 쓰는 기기에서 쓰인다.
@@ -131,14 +122,8 @@ export default function WeekBoardView({
   participantCounts,
   show3D,
   captionOverride,
-  emptyHint,
-  onDaySelect,
-  selectedIndex,
 }: Props) {
   const [selected, setSelected] = useState<number | null>(null);
-  // 바깥에서 선택을 관리하면 그 값을, 아니면 자체 패널의 선택 상태를 쓴다.
-  const isControlled = onDaySelect !== undefined;
-  const activeIndex = isControlled ? (selectedIndex ?? null) : selected;
   const [sceneReady, setSceneReady] = useState(false);
   const [onScreen, setOnScreen] = useState(true);
   const dayButtons = useRef<Array<HTMLButtonElement | null>>([]);
@@ -194,8 +179,8 @@ export default function WeekBoardView({
     );
   }
 
-  const panelDay = isControlled || selected === null ? null : model.days[selected];
-  const caption = captionOverride ?? getBoardCaption(model, isDemo, emptyHint);
+  const panelDay = selected === null ? null : model.days[selected];
+  const caption = captionOverride ?? getBoardCaption(model, isDemo);
 
   return (
     <section
@@ -218,7 +203,7 @@ export default function WeekBoardView({
           >
             <WeekBoardSceneLazy
               model={model}
-              selectedIndex={activeIndex}
+              selectedIndex={selected}
               active={onScreen}
               onReady={() => setSceneReady(true)}
             />
@@ -234,14 +219,10 @@ export default function WeekBoardView({
                 dayButtons.current[i] = el;
               }}
               type="button"
-              onClick={() =>
-                isControlled ? onDaySelect(i) : setSelected((cur) => (cur === i ? null : i))
-              }
+              onClick={() => setSelected((cur) => (cur === i ? null : i))}
               aria-label={dayAriaLabel(day, isDemo)}
-              // 바깥 선택 모드는 패널을 열지 않으므로 '눌림' 상태로, 패널 모드는 '펼침' 상태로 알린다.
-              aria-pressed={isControlled ? activeIndex === i : undefined}
-              aria-expanded={isControlled ? undefined : selected === i}
-              aria-controls={!isControlled && selected === i ? panelId : undefined}
+              aria-expanded={selected === i}
+              aria-controls={selected === i ? panelId : undefined}
               className="rounded-xl outline-none transition hover:bg-text-primary/5 focus-visible:ring-2 focus-visible:ring-accent"
             />
           ))}

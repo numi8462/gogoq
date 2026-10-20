@@ -24,7 +24,7 @@ import {
   WebGLRenderer,
 } from "three";
 import type { BoardDay, ScenePalette, WeekBoardModel } from "@/lib/weekBoard";
-import type { EventColor } from "@/types";
+import { EVENT_COLOR_HEX } from "@/lib/utils";
 
 type Props = {
   model: WeekBoardModel;
@@ -108,16 +108,6 @@ const POLE_HEIGHT = 0.44;
 // 돌은 모두 같은 모양으로 한 줄에 똑바로 놓는다. 앞뒤로 살짝 납작한 타원이라 위에서 보면 징검돌처럼 보인다.
 const STONE_DEPTH_SCALE = 0.92;
 const SELECTED_LIFT = 0.14;
-
-// EVENT_DOT_CLASSES(Tailwind 500 계열)와 같은 색. three는 CSS 클래스를 못 읽어서 값으로 둔다.
-const FLAG_HEX: Record<EventColor, string> = {
-  blue: "#3b82f6",
-  red: "#ef4444",
-  green: "#22c55e",
-  purple: "#a855f7",
-  orange: "#f97316",
-  gray: "#6b7280",
-};
 
 const FLAG_X: Record<number, number[]> = {
   1: [0],
@@ -369,7 +359,7 @@ class BoardRenderer {
         opacity,
       });
       const clothMaterial = new MeshStandardMaterial({
-        color: FLAG_HEX[event.color],
+        color: EVENT_COLOR_HEX[event.color],
         roughness: 0.6,
         transparent: opacity < 1,
         opacity,

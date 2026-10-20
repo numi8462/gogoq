@@ -9,10 +9,28 @@
   --color-accent-secondary: #ff6b4a;
   --color-tile-default: #e0e0dd;
   --color-tile-scheduled: #c9d4c9;
+  /* 그룹 캘린더 칸(보드 타일). edge는 테두리와 타일 아래 두께로 쓴다. */
+  --color-cell: #ddd0e5;
+  --color-cell-edge: #bfa8ca;
+  --color-cell-scheduled: #ffc4da;
+  --color-cell-scheduled-edge: #e58db1;
   --color-text-primary: #1c1d22;
   --color-text-secondary: #6b6d76;
   --color-danger: #dc2626;
   --font-sans: "Pretendard Variable", "Pretendard", ui-sans-serif, system-ui, sans-serif;
+
+  /* 캘린더 위 말이 제자리에서 살짝 튀는 효과. motion-safe:animate-pawn-bob 으로 쓴다. */
+  --animate-pawn-bob: pawn-bob 1.6s ease-in-out infinite;
+
+  @keyframes pawn-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-2px);
+    }
+  }
 }
 
 /* next/font가 <html>에 심어주는 변수를 font-bowlby 유틸리티로 연결 */
@@ -34,6 +52,10 @@
     --color-accent-secondary: #ff8a6b;
     --color-tile-default: #64646a;
     --color-tile-scheduled: #6e8679;
+    --color-cell: #2c1b4a;
+    --color-cell-edge: #150a27;
+    --color-cell-scheduled: #4a2156;
+    --color-cell-scheduled-edge: #250f30;
     --color-text-primary: #f2f2f0;
     --color-text-secondary: #9a9ca5;
     --color-danger: #f87171;
@@ -51,6 +73,11 @@ html.light {
   --color-accent-secondary: #ff6b4a;
   --color-tile-default: #e0e0dd;
   --color-tile-scheduled: #c9d4c9;
+  /* 그룹 캘린더 칸(보드 타일). edge는 테두리와 타일 아래 두께로 쓴다. */
+  --color-cell: #ddd0e5;
+  --color-cell-edge: #bfa8ca;
+  --color-cell-scheduled: #ffc4da;
+  --color-cell-scheduled-edge: #e58db1;
   --color-text-primary: #1c1d22;
   --color-text-secondary: #6b6d76;
   --color-danger: #dc2626;
@@ -66,6 +93,10 @@ html.dark {
   --color-accent-secondary: #ff8a6b;
   --color-tile-default: #64646a;
   --color-tile-scheduled: #6e8679;
+  --color-cell: #2c1b4a;
+  --color-cell-edge: #150a27;
+  --color-cell-scheduled: #4a2156;
+  --color-cell-scheduled-edge: #250f30;
   --color-text-primary: #f2f2f0;
   --color-text-secondary: #9a9ca5;
   --color-danger: #f87171;
@@ -82,102 +113,6 @@ body {
 
 button {
   cursor: pointer;
-}
-
-/* react-calendar 커스텀 */
-.react-calendar {
-  width: 100% !important;
-  border: none !important;
-  background: transparent !important;
-  font-family: inherit !important;
-}
-
-.react-calendar__navigation button {
-  color: var(--color-text-primary) !important;
-  font-size: 14px !important;
-  background: transparent !important;
-  border-radius: 8px !important;
-  min-width: 36px !important;
-}
-
-.react-calendar__navigation button:hover {
-  background: var(--color-surface-2) !important;
-}
-
-.react-calendar__month-view__weekdays__weekday {
-  color: var(--color-text-secondary) !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-}
-
-.react-calendar__month-view__weekdays__weekday abbr {
-  text-decoration: none !important;
-}
-
-.react-calendar__tile {
-  height: 60px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  padding-top: 8px !important;
-  color: var(--color-text-primary) !important;
-  background: transparent !important;
-  border-radius: 8px !important;
-  font-size: 12px !important;
-  transition: background 0.15s !important;
-  overflow: hidden !important;
-  position: relative !important;
-}
-
-.react-calendar__tile:hover {
-  background: color-mix(in srgb, var(--color-accent) 12%, transparent) !important;
-}
-
-.react-calendar__tile--now {
-  background: color-mix(in srgb, var(--color-accent) 14%, transparent) !important;
-}
-
-.react-calendar__tile--active {
-  background: var(--color-accent) !important;
-  color: #ffffff !important;
-  border-radius: 10px !important;
-}
-
-.react-calendar__tile--active:hover {
-  background: var(--color-accent) !important;
-}
-
-.react-calendar__month-view__days__day--neighboringMonth {
-  color: var(--color-text-secondary) !important;
-  opacity: 0.5 !important;
-}
-
-.react-calendar__tileContent {
-  position: absolute !important;
-  bottom: 0.25rem !important;
-  left: 0.25rem !important;
-  right: 0.25rem !important;
-  z-index: 10 !important;
-  pointer-events: none !important;
-}
-
-/* PC: 타일 높이 크게 */
-@media (min-width: 640px) {
-  .react-calendar__tile {
-    height: 100px !important;
-    font-size: 13px !important;
-    padding-top: 4px !important;
-    padding-bottom: 2rem !important;
-  }
-}
-
-/* 모바일 타일도 약간 크게 */
-@media (max-width: 639px) {
-  .react-calendar__tile {
-    height: 64px !important;
-    padding-top: 6px !important;
-    padding-bottom: 1.5rem !important;
-  }
 }
 
 /* PC Custom Scrollbar for EventSidebar */
