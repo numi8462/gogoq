@@ -8,6 +8,7 @@ import EventSidebar from "@/components/calendar/EventSidebar";
 import NicknameModal from "@/components/ui/NicknameModal";
 import ChatWidget from "@/components/chat/ChatWidget";
 import EditGroupNameModal from "@/components/group/EditGroupNameModal";
+import GroupWeekBoard from "@/components/group/GroupWeekBoard";
 import Logo from "@/components/common/Logo";
 import Button from "@/components/common/Button";
 import { useEvents } from "@/hooks/useEvents";
@@ -108,13 +109,27 @@ export default function GroupPage() {
 
       <main className="max-w-7xl mx-auto p-4 overflow-hidden grid grid-cols-1 md:grid-cols-[1fr_320px] gap-4">
         <div className="h-full overflow-hidden">
-          <CalendarView events={events} onDateSelect={setSelectedDate} />
+          <CalendarView
+            events={events}
+            selectedDate={selectedDate}
+            onDateSelect={setSelectedDate}
+          />
         </div>
-        <EventSidebar
-          selectedDate={selectedDate}
-          events={events}
-          groupId={groupId}
-        />
+        {/* 이번 주 징검다리 보드를 일정 목록 바로 위에 둬서, 돌을 누르면 아래에 그날 일정이 보이게 한다. */}
+        <div className="flex flex-col gap-4 min-w-0">
+          <GroupWeekBoard
+            groupId={groupId}
+            groupName={groupName}
+            events={events}
+            selectedDate={selectedDate}
+            onDateSelect={setSelectedDate}
+          />
+          <EventSidebar
+            selectedDate={selectedDate}
+            events={events}
+            groupId={groupId}
+          />
+        </div>
       </main>
 
       <ChatWidget groupId={groupId} events={events} />

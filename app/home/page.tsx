@@ -9,11 +9,19 @@ import { ArrowRight, LogOut } from "lucide-react";
 import { useUser } from "@/hooks/useUser";
 import { useMyGroups } from "@/hooks/useMyGroups";
 import { createClient } from "@/lib/supabase/client";
+import HomeWeekBoard from "@/components/home/HomeWeekBoard";
 
 export default function HomePage() {
   const router = useRouter();
   const { user, isLoading: isUserLoading } = useUser();
-  const { data: myGroups = [] } = useMyGroups(user?.id);
+  const { data: myGroups = [], isPending: isMyGroupsPending } = useMyGroups(user?.id);
+  // 보여줄 내 방이 있으면 실제 이번 주 일정, 없으면(게스트 포함) 예시 보드
+  const boardMode =
+    isUserLoading || (user && isMyGroupsPending)
+      ? "loading"
+      : user && myGroups.length > 0
+        ? "live"
+        : "demo";
   const [isLoading, setIsLoading] = useState(false);
   const [groupName, setGroupName] = useState("");
   const [inviteInput, setInviteInput] = useState("");
@@ -95,6 +103,9 @@ export default function HomePage() {
             </p>
           </div>
         </div>
+
+        {/* 이번 주 징검다리 보드 */}
+        <HomeWeekBoard mode={boardMode} groups={myGroups} />
 
         {/* 참여한 방 (로그인 시에만) */}
         {user && myGroups.length > 0 && (

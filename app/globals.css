@@ -7,8 +7,8 @@
   --color-accent: #ff4696;
   --color-accent-hover: #e0257a;
   --color-accent-secondary: #ff6b4a;
-  --color-tile-default: #eaeae6;
-  --color-tile-scheduled: #dce6dd;
+  --color-tile-default: #e0e0dd;
+  --color-tile-scheduled: #c9d4c9;
   --color-text-primary: #1c1d22;
   --color-text-secondary: #6b6d76;
   --color-danger: #dc2626;
@@ -32,8 +32,8 @@
     --color-accent: #ff4696;
     --color-accent-hover: #ff74b0;
     --color-accent-secondary: #ff8a6b;
-    --color-tile-default: #232328;
-    --color-tile-scheduled: #213329;
+    --color-tile-default: #64646a;
+    --color-tile-scheduled: #6e8679;
     --color-text-primary: #f2f2f0;
     --color-text-secondary: #9a9ca5;
     --color-danger: #f87171;
@@ -49,8 +49,8 @@ html.light {
   --color-accent: #ff4696;
   --color-accent-hover: #e0257a;
   --color-accent-secondary: #ff6b4a;
-  --color-tile-default: #eaeae6;
-  --color-tile-scheduled: #dce6dd;
+  --color-tile-default: #e0e0dd;
+  --color-tile-scheduled: #c9d4c9;
   --color-text-primary: #1c1d22;
   --color-text-secondary: #6b6d76;
   --color-danger: #dc2626;
@@ -64,8 +64,8 @@ html.dark {
   --color-accent: #ff4696;
   --color-accent-hover: #ff74b0;
   --color-accent-secondary: #ff8a6b;
-  --color-tile-default: #232328;
-  --color-tile-scheduled: #213329;
+  --color-tile-default: #64646a;
+  --color-tile-scheduled: #6e8679;
   --color-text-primary: #f2f2f0;
   --color-text-secondary: #9a9ca5;
   --color-danger: #f87171;

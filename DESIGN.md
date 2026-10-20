@@ -26,8 +26,8 @@
 | `ink-muted`        | `#6B6D76` | 보조 텍스트, 캡션                                                |
 | `accent-primary`   | `#5546FF` | 시그니처 포인트 (말/piece, 주요 CTA) — 비비드 인디고             |
 | `accent-secondary` | `#FF6B4A` | 오늘/하이라이트 강조 (탄저린 계열, primary와 확실히 구분되는 색) |
-| `tile-default`     | `#EAEAE6` | 징검다리 타일 기본 상태                                          |
-| `tile-scheduled`   | `#DCE6DD` | 모임이 있는 날의 타일 (세이지 그린, 채도 낮게)                   |
+| `tile-default`     | `#E0E0DD` | 징검다리 타일 기본 상태                                          |
+| `tile-scheduled`   | `#C9D4C9` | 모임이 있는 날의 타일 (세이지 그린, 채도 낮게)                   |
 | `border-hairline`  | `#E3E3DF` | 카드/구분선                                                      |
 
 Tailwind에서는 `tailwind.config`의 `theme.extend.colors`에 위 키값 그대로 등록해서
@@ -45,8 +45,8 @@ Tailwind에서는 `tailwind.config`의 `theme.extend.colors`에 위 키값 그�
 | `ink-muted`        | `#6B6D76` | `#9A9CA5` | 보조 텍스트                                     |
 | `accent-primary`   | `#5546FF` | `#7C6FFF` | 시그니처 포인트 (다크에서 살짝 밝게, 대비 확보) |
 | `accent-secondary` | `#FF6B4A` | `#FF8A6B` | 오늘/하이라이트 강조                            |
-| `tile-default`     | `#EAEAE6` | `#232328` | 징검다리 타일 기본                              |
-| `tile-scheduled`   | `#DCE6DD` | `#213329` | 모임 있는 날 타일                               |
+| `tile-default`     | `#E0E0DD` | `#64646A` | 징검다리 타일 기본                              |
+| `tile-scheduled`   | `#C9D4C9` | `#6E8679` | 모임 있는 날 타일                               |
 | `border-hairline`  | `#E3E3DF` | `#2A2A30` | 카드/구분선                                     |
 
 **확인 필요**
@@ -105,6 +105,27 @@ transition(또는 Framer Motion)**만으로도 충분히 구현 가능함. Canva
 - [ ] SVG + CSS/Framer Motion (더 단순, 유지보수 쉬움, 반응형 대응 쉬움)
 - [ ] HTML Canvas (구현 복잡도 ↑, 대신 "Canvas API 경험"을 이력서/면접에서 얘기할
       거리가 생김)
+- [x] **결정: Three.js(WebGL), react-three-fiber 없이 직접 사용.** 위 두 안보다 무겁지만,
+      보드게임 판의 입체감(돌 높낮이, 말의 포물선 이동, 그림자)이 시그니처의 핵심이라고 보고
+      선택. 대신 무게가 홈 첫 로딩에 얹히지 않도록 아래 원칙을 지킨다.
+  - 처음에는 react-three-fiber로 만들었으나, fiber가 three 전체를 등록해 쓰지 않는 코드까지
+    번들에 남고 별도 React 렌더러까지 실려서 3D 청크가 컸다. 장면이 돌 7개와 말 하나뿐이라
+    React 바인딩 없이 작은 클래스로 직접 다루고, 필요한 three 클래스만 이름으로 import한다.
+  - 3D 코드는 `next/dynamic`(ssr: false)으로 분리하고, 페이지 로드가 끝나 브라우저가 한가해진
+    뒤에 WebGL 확인과 함께 불러온다. 그 전과 WebGL을 못 쓰는 기기에서는 같은 자리에 정적인
+    돌을 보여준다.
+  - 말이 이동할 때만 매 프레임 그리고, 제자리에서 튀는 연출은 초당 20번만 그린다.
+    화면 밖이거나 `prefers-reduced-motion`이면 바뀐 게 있을 때만 그린다.
+  - 요일 라벨과 버튼은 3D 위에 겹친 HTML로 둔다(키보드/스크린리더 접근, 한글 폰트를
+    WebGL에 올리지 않기 위함). 3D 캔버스는 `aria-hidden`.
+  - 타일 색은 위 `tile-*` 토큰을 3D와 정적 대체 화면이 함께 쓴다. 다크모드 값은 실제
+    배경(`#1E1033`) 위에서 돌이 묻히지 않도록 밝게 조정했다.
+  - 돌은 같은 모양으로 한 줄에 똑바로 놓는다. 지난 날과 일정 있는 날은 높이 대신 색, 투명도,
+    깃발로 구분하고, 돌은 선택했을 때만 떠오른다.
+  - 그룹 페이지에도 같은 보드를 일정 목록 위에 둔다. 이 그룹의 이번 주 일정만 보여주고, 돌을 누르면
+    별도 패널 대신 캘린더와 일정 목록에서 그 날짜가 선택된다. 일정이 실시간으로 바뀌면 말도 다시 이동한다.
+  - 구현: 공통 화면과 3D 장면은 `components/board/`, 홈은 `components/home/HomeWeekBoard.tsx`,
+    그룹 페이지는 `components/group/GroupWeekBoard.tsx`, 상태 계산은 `lib/weekBoard.ts`.
 
 ---
 
