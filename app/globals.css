@@ -12,7 +12,12 @@
   --color-text-primary: #1c1d22;
   --color-text-secondary: #6b6d76;
   --color-danger: #dc2626;
-  --font-sans: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Pretendard Variable", "Pretendard", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* next/font가 <html>에 심어주는 변수를 font-bowlby 유틸리티로 연결 */
+@theme inline {
+  --font-bowlby: var(--font-bowlby-one);
 }
 
 :root {

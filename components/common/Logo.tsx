@@ -33,7 +33,7 @@ export default function Logo({ size = "md" }: Props) {
   return (
     <Link
       href="/home"
-      className="inline-flex items-center font-bold font-bowlby text-accent text-6xl"
+      className="inline-flex items-center font-bowlby text-accent text-6xl"
       draggable="false"
     >
       gogo
