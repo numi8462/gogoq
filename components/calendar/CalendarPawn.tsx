@@ -2,6 +2,8 @@
 
 import { useLayoutEffect, useRef } from "react";
 import { prefersReducedMotion } from "@/lib/utils";
+import { hopKeyframes, type Point } from "@/lib/pawnHop";
+import PawnIcon from "@/components/board/PawnIcon";
 
 type Props = {
   /**
@@ -13,32 +15,12 @@ type Props = {
   jump: boolean;
 };
 
-type Point = { x: number; y: number };
-
 const INSET = 4;
 const START_DELAY_MS = 450;
 // 오늘 칸에서 다음 모임까지 가는 이동을 몇 번 되풀이해 보여준다. 끝나면 도착 칸에 멈춘다.
 const LOOP_COUNT = 5;
 const LOOP_PAUSE_MS = 1800;
 const FADE_MS = 180;
-
-/** 포물선을 그리며 a에서 b로 뛰는 키프레임. 출발할 때 웅크리고 착지할 때 살짝 찌그러진다. */
-function hopKeyframes(a: Point, b: Point, height: number): Keyframe[] {
-  const at = (t: number, sx: number, sy: number, offset: number): Keyframe => {
-    const x = a.x + (b.x - a.x) * t;
-    const y = a.y + (b.y - a.y) * t - 4 * height * t * (1 - t);
-    return { transform: `translate(${x}px, ${y}px) scale(${sx}, ${sy})`, offset };
-  };
-  return [
-    at(0, 1, 1, 0),
-    at(0, 1.12, 0.86, 0.12),
-    at(0.25, 0.96, 1.06, 0.3),
-    at(0.5, 0.94, 1.08, 0.5),
-    at(0.75, 0.96, 1.06, 0.7),
-    at(1, 1.14, 0.84, 0.88),
-    at(1, 1, 1, 1),
-  ];
-}
 
 /**
  * 캘린더 칸 위를 움직이는 말. 3D 없이 DOM 요소와 Web Animations API로 그린다.
@@ -180,15 +162,7 @@ export default function CalendarPawn({ path, jump }: Props) {
       style={{ transform: "translate(-9999px, -9999px)" }}
     >
       <div className="h-full w-full motion-safe:animate-pawn-bob">
-        <svg viewBox="0 0 22 27" className="h-full w-full drop-shadow-[0_2px_1.5px_rgb(0_0_0/0.35)]">
-          <circle cx="11" cy="6" r="5" fill="currentColor" />
-          <path
-            d="M7.5 11.5h7l-1 2.2c1.6 2.2 2.6 4.6 3.3 7.3H5.2c.7-2.7 1.7-5.1 3.3-7.3z"
-            fill="currentColor"
-          />
-          <rect x="2.5" y="20.5" width="17" height="5.5" rx="2.75" fill="currentColor" />
-          <circle cx="9.3" cy="4.4" r="1.6" fill="white" opacity="0.45" />
-        </svg>
+        <PawnIcon className="h-full w-full drop-shadow-[0_2px_1.5px_rgb(0_0_0/0.35)]" />
       </div>
     </div>
   );

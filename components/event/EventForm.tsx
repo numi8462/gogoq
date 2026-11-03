@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
+import { Minus, Plus } from "lucide-react";
 import { useGroupStore } from "@/lib/store/useGroupStore";
 import {
   useCreateEvent,
@@ -8,12 +9,21 @@ import {
   useUpdateEvent,
 } from "@/hooks/useEvents";
 import { format } from "date-fns";
-import { cn, EVENT_DOT_CLASSES } from "@/lib/utils";
+import { cn, EVENT_COLORS, EVENT_DOT_CLASSES } from "@/lib/utils";
 import { Event, EventColor } from "@/types";
 import Modal from "@/components/common/Modal";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
 import ConfirmModal from "../ui/ConfirmModal";
+
+const COLOR_LABEL: Record<EventColor, string> = {
+  blue: "파랑",
+  red: "빨강",
+  green: "초록",
+  purple: "보라",
+  orange: "주황",
+  gray: "회색",
+};
 
 interface EventFormProps {
   groupId: string;
@@ -29,6 +39,7 @@ export default function EventForm({
   defaultValues,
 }: EventFormProps) {
   const isEditMode = !!defaultValues;
+  const titleInputId = useId();
 
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -119,13 +130,16 @@ export default function EventForm({
 
   return (
     <Modal title={isEditMode ? "일정 수정" : "일정 추가"} onClose={onClose}>
-      <p className="text-xs text-accent -mt-2">
+      <p className="text-sm font-medium text-accent -mt-3">
         {format(selectedDate, "yyyy년 M월 d일")}
       </p>
 
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-text-secondary">게임</label>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor={titleInputId} className="text-xs font-medium text-text-secondary">
+          게임
+        </label>
         <Input
+          id={titleInputId}
           value={form.title}
           onChange={(e) => setForm({ ...form, title: e.target.value })}
           placeholder="예) 롤, 발로란트"
@@ -134,29 +148,30 @@ export default function EventForm({
       </div>
 
       {/* 색상 선택 */}
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-text-secondary">색상</label>
-        <div className="flex justify-between p-2 bg-bg rounded-lg">
-          {["blue", "red", "green", "purple", "orange", "gray"].map((col) => (
-            <Button
+      <div role="group" aria-label="색상" className="flex flex-col gap-1.5">
+        <span className="text-xs font-medium text-text-secondary">색상</span>
+        <div className="flex justify-between px-1 py-1">
+          {EVENT_COLORS.map((col) => (
+            <button
               key={col}
-              variant="ghost"
-              size="sm"
+              type="button"
+              aria-label={COLOR_LABEL[col]}
+              aria-pressed={form.color === col}
               className={cn(
-                "w-8 h-8 p-0 rounded-full border-2 shadow-sm transition-all duration-200",
+                "w-8 h-8 rounded-full transition-[transform,box-shadow] duration-150 active:scale-90",
                 form.color === col
-                  ? "border-accent ring-2 ring-accent shadow-lg"
-                  : "border-transparent",
-                EVENT_DOT_CLASSES[col as EventColor],
+                  ? "ring-2 ring-accent ring-offset-2 ring-offset-surface scale-110"
+                  : "hover:scale-110",
+                EVENT_DOT_CLASSES[col],
               )}
-              onClick={() => setForm({ ...form, color: col as EventColor })}
+              onClick={() => setForm({ ...form, color: col })}
             />
           ))}
         </div>
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-text-secondary">시간</label>
+      <div role="group" aria-label="시간" className="flex flex-col gap-1.5">
+        <span className="text-xs font-medium text-text-secondary">시간</span>
         <div className="flex items-center gap-2 flex-wrap">
           <TimeSelect
             hour={form.startHour}
@@ -174,12 +189,15 @@ export default function EventForm({
         </div>
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-text-secondary">최대 인원</label>
+      <div role="group" aria-label="최대 인원" className="flex flex-col gap-1.5">
+        <span className="text-xs font-medium text-text-secondary">최대 인원</span>
         <div className="flex items-center gap-3">
           <Button
-            variant="ghost"
+            variant="secondary"
             size="sm"
+            aria-label="최대 인원 줄이기"
+            className="w-10 px-0 flex items-center justify-center"
+            disabled={form.maxParticipants <= 1}
             onClick={() =>
               setForm((f) => ({
                 ...f,
@@ -187,14 +205,20 @@ export default function EventForm({
               }))
             }
           >
-            −
+            <Minus size={16} />
           </Button>
-          <span className="text-sm font-medium text-text-primary w-6 text-center">
+          <span
+            aria-live="polite"
+            className="text-base font-semibold tabular-nums text-text-primary w-6 text-center"
+          >
             {form.maxParticipants}
           </span>
           <Button
-            variant="ghost"
+            variant="secondary"
             size="sm"
+            aria-label="최대 인원 늘리기"
+            className="w-10 px-0 flex items-center justify-center"
+            disabled={form.maxParticipants >= 10}
             onClick={() =>
               setForm((f) => ({
                 ...f,
@@ -202,7 +226,7 @@ export default function EventForm({
               }))
             }
           >
-            +
+            <Plus size={16} />
           </Button>
         </div>
       </div>
@@ -224,7 +248,7 @@ export default function EventForm({
         <button
           onClick={() => setShowConfirm(true)}
           disabled={isPending}
-          className="w-full text-danger hover:text-danger text-sm font-semibold"
+          className="w-full -mt-1 py-2 rounded-xl text-danger hover:bg-danger/10 text-sm font-semibold transition-colors"
         >
           삭제
         </button>
@@ -261,7 +285,7 @@ function TimeSelect({
   const mins = ["00", "30"];
 
   const selectClass =
-    "bg-bg border border-[var(--border)] text-text-primary rounded-lg px-2 py-1.5 text-sm outline-none focus:border-accent transition";
+    "bg-surface border border-(--border) text-text-primary rounded-lg px-2 py-1.5 text-sm tabular-nums outline-none focus:border-accent focus:ring-3 focus:ring-accent/20 transition-[border-color,box-shadow]";
 
   return (
     <div className="flex items-center gap-1">

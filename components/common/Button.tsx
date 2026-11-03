@@ -9,12 +9,14 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   isLoading?: boolean;
 };
 
+// primary는 캘린더 칸처럼 아래에 두께(lip)가 있는 보드 타일 모양이라, 누르면 그만큼 내려앉는다.
 const variantClass: Record<Variant, string> = {
-  primary: "bg-accent text-white hover:bg-accent-hover active:scale-[0.98]",
+  primary:
+    "bg-accent text-white hover:bg-accent-hover shadow-[0_3px_0_color-mix(in_srgb,var(--color-accent)_62%,black)] active:translate-y-[2px] active:shadow-[0_1px_0_color-mix(in_srgb,var(--color-accent)_62%,black)] disabled:shadow-none",
   secondary:
-    "bg-surface-2 text-text-primary border border-[var(--border)] active:scale-[0.98]",
-  ghost: "text-text-secondary hover:text-text-primary",
-  danger: "bg-danger/10 text-danger hover:bg-danger/20",
+    "bg-surface-2 text-text-primary border border-(--border) hover:bg-[color-mix(in_srgb,var(--color-surface-2),var(--color-text-primary)_6%)] active:scale-[0.97]",
+  ghost: "text-text-secondary hover:text-text-primary hover:bg-surface-2 active:scale-[0.97]",
+  danger: "bg-danger/10 text-danger hover:bg-danger/20 active:scale-[0.97]",
 };
 
 const sizeClass: Record<Size, string> = {
@@ -35,7 +37,8 @@ export default function Button({
     <button
       disabled={disabled || isLoading}
       className={cn(
-        "font-medium transition-all disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed h-10",
+        "font-semibold h-10 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed",
+        "transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-150",
         variantClass[variant],
         sizeClass[size],
         className,

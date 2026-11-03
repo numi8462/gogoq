@@ -200,22 +200,29 @@ export default function ChatPanel({ groupId, events, onClose }: Props) {
   };
 
   return (
-    <div className="w-[min(92vw,360px)] h-[min(70vh,520px)] rounded-2xl border border-(--border) bg-bg shadow-2xl flex flex-col overflow-hidden">
+    <div
+      role="dialog"
+      aria-label="일정 챗봇"
+      className="w-[min(92vw,360px)] h-[min(70vh,520px)] rounded-2xl border border-(--border) bg-surface shadow-[0_24px_48px_-12px_rgb(18_8_31/0.35)] flex flex-col overflow-hidden origin-bottom-right transition-[opacity,scale] duration-200 starting:opacity-0 starting:scale-95"
+    >
       <div className="flex items-center justify-between px-4 py-3 border-b border-(--border) shrink-0">
-        <p className="text-sm font-semibold text-text-primary">
-          일정 챗봇
-        </p>
+        <div>
+          <p className="text-sm font-semibold text-text-primary">일정 챗봇</p>
+          <p className="text-xs text-text-secondary">초안은 확인을 눌러야 저장돼요</p>
+        </div>
         <button
           onClick={onClose}
-          className="text-text-secondary hover:text-text-primary p-1 rounded-lg hover:bg-accent transition"
+          aria-label="챗봇 닫기"
+          className="-mr-1.5 text-text-secondary hover:text-text-primary p-1.5 rounded-lg hover:bg-surface-2 transition-colors"
         >
-          <X size={16} />
+          <X size={18} />
         </button>
       </div>
 
       <div
         ref={scrollRef}
-        className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3"
+        aria-live="polite"
+        className="flex-1 overflow-y-auto overscroll-contain px-4 py-3 flex flex-col gap-2.5"
       >
         {messages.map((m) => {
           if ("action" in m) {
@@ -244,8 +251,8 @@ export default function ChatPanel({ groupId, events, onClose }: Props) {
               <p
                 className={
                   m.role === "user"
-                    ? "max-w-[85%] rounded-xl px-3 py-2 text-sm bg-accent text-white"
-                    : "max-w-[85%] rounded-xl px-3 py-2 text-sm bg-surface-2 text-text-primary"
+                    ? "max-w-[85%] rounded-2xl rounded-br-md px-3.5 py-2 text-sm leading-relaxed bg-accent text-white"
+                    : "max-w-[85%] rounded-2xl rounded-bl-md px-3.5 py-2 text-sm leading-relaxed bg-surface-2 text-text-primary"
                 }
               >
                 {m.text}
@@ -255,7 +262,7 @@ export default function ChatPanel({ groupId, events, onClose }: Props) {
         })}
         {isSending && (
           <div className="flex justify-start">
-            <p className="max-w-[85%] rounded-xl px-3 py-2 text-sm bg-surface-2 text-text-secondary">
+            <p className="max-w-[85%] rounded-2xl rounded-bl-md px-3.5 py-2 text-sm bg-surface-2 text-text-secondary motion-safe:animate-pulse">
               생각하는 중...
             </p>
           </div>
@@ -272,7 +279,8 @@ export default function ChatPanel({ groupId, events, onClose }: Props) {
         />
         <Button
           size="sm"
-          className="shrink-0 px-3"
+          aria-label="보내기"
+          className="shrink-0 w-10 px-0 flex items-center justify-center"
           onClick={handleSend}
           disabled={!input.trim() || isSending}
         >

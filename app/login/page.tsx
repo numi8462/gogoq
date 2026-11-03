@@ -112,16 +112,16 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen bg-bg flex flex-col items-center justify-center px-4">
-      <div className="relative w-full max-w-md flex flex-col gap-6">
-        <div className="text-center flex flex-col items-center gap-6 mb-2">
-          <Logo size="md" />
-          <h1 className="text-xl font-bold text-text-primary">
+    <main className="min-h-screen bg-bg flex flex-col items-center justify-center px-4 py-16">
+      <div className="relative w-full max-w-md flex flex-col gap-5">
+        <div className="text-center flex flex-col items-center gap-6 mb-3">
+          <Logo size="lg" />
+          <h1 className="text-2xl font-extrabold tracking-[-0.03em] text-text-primary">
             {mode === "signin" ? "로그인" : "회원가입"}
           </h1>
         </div>
 
-        <div className="rounded-2xl p-5 flex flex-col gap-3 bg-surface/50 border border-(--border)">
+        <div className="rounded-2xl p-5 flex flex-col gap-3 bg-surface border border-(--border)">
           <Input
             type="email"
             value={email}
@@ -171,11 +171,12 @@ export default function LoginPage() {
               setError(null);
               setFieldErrors({});
             }}
-            className="text-xs text-text-secondary hover:text-text-primary transition text-center"
+            className="py-1 text-sm text-text-secondary transition-colors text-center group"
           >
-            {mode === "signin"
-              ? "계정이 없으신가요? 회원가입"
-              : "이미 계정이 있으신가요? 로그인"}
+            {mode === "signin" ? "계정이 없으신가요? " : "이미 계정이 있으신가요? "}
+            <span className="font-semibold text-accent group-hover:underline underline-offset-4">
+              {mode === "signin" ? "회원가입" : "로그인"}
+            </span>
           </button>
         </div>
 
@@ -188,7 +189,7 @@ export default function LoginPage() {
         <Button
           variant="secondary"
           onClick={handleKakao}
-          className="w-full flex items-center justify-center gap-2 bg-[#FEE500] hover:bg-[#FDD800] text-[#191919] border-0"
+          className="w-full flex items-center justify-center gap-2 bg-[#FEE500] hover:bg-[#FDD800] text-[#191919] border-0 shadow-[0_3px_0_#d9c300] active:scale-100 active:translate-y-[2px] active:shadow-[0_1px_0_#d9c300]"
         >
           <KakaoIcon className="h-4 w-4" />
           카카오로 계속하기
@@ -196,12 +197,16 @@ export default function LoginPage() {
 
         <button
           onClick={() => router.push("/home")}
-          className="text-xs text-text-secondary hover:text-text-primary transition text-center"
+          className="py-1 text-sm text-text-secondary hover:text-text-primary underline-offset-4 hover:underline transition-colors text-center"
         >
           로그인 없이 게스트로 계속하기
         </button>
 
-        {error && <p className="text-xs text-danger text-center">{error}</p>}
+        {error && (
+          <p role="alert" className="text-sm text-danger text-center">
+            {error}
+          </p>
+        )}
       </div>
     </main>
   );

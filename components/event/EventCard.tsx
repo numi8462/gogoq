@@ -12,7 +12,7 @@ import { useGroupStore } from "@/lib/store/useGroupStore";
 import Button from "@/components/common/Button";
 import { cn } from "@/lib/utils";
 import { Event } from "@/types";
-import { Edit } from "lucide-react";
+import { Pencil } from "lucide-react";
 
 interface EventCardProps {
   event: Event;
@@ -45,7 +45,7 @@ export default function EventCard({ event, groupId, onEdit }: EventCardProps) {
   }[event.status];
 
   const statusColor = {
-    open: "bg-green-500/10 text-green-700 dark:text-green-400",
+    open: "bg-success/12 text-success",
     closed: "bg-surface-2 text-text-secondary",
     cancelled: "bg-danger/10 text-danger",
   }[event.status];
@@ -68,27 +68,30 @@ export default function EventCard({ event, groupId, onEdit }: EventCardProps) {
   };
 
   return (
-    <div className="rounded-xl border border-(--border) bg-bg p-3 flex flex-col gap-3 transition hover:border-accent/40">
+    <div className="rounded-2xl border border-(--border) bg-surface p-4 flex flex-col gap-3">
       {/* 제목 + 상태 뱃지 + 수정 버튼 */}
-      <div className="flex items-center justify-between">
-        <span className="font-medium text-text-primary">{event.title}</span>
-        <div className="flex items-center gap-2">
-          <span className={cn("text-xs px-2 py-0.5 rounded-full", statusColor)}>
+      <div className="flex items-start justify-between gap-2">
+        <h3 className="text-base font-semibold tracking-[-0.01em] text-text-primary min-w-0 break-words">
+          {event.title}
+        </h3>
+        <div className="flex items-center gap-1 shrink-0">
+          <span className={cn("text-xs font-medium px-2 py-0.5 rounded-full", statusColor)}>
             {statusLabel}
           </span>
           {onEdit && (
             <button
               onClick={() => onEdit(event)}
-              className="text-xs text-text-secondary hover:text-accent transition"
+              aria-label={`${event.title} 일정 수정`}
+              className="-mr-1.5 p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
             >
-              <Edit className="w-4 h-4" />
+              <Pencil className="w-4 h-4" />
             </button>
           )}
         </div>
       </div>
 
       {/* 시간 */}
-      <div className="text-sm text-text-primary">
+      <div className="-mt-1 text-sm font-medium tabular-nums text-text-primary">
         {format(new Date(event.start_time), "HH:mm", { locale: ko })}
         {" ~ "}
         {format(new Date(event.end_time), "HH:mm", { locale: ko })}
@@ -134,10 +137,10 @@ function ParticipantList({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <span className="text-xs text-text-secondary">
-        {participants.length} / {maxParticipants}명
+      <span className="text-xs text-text-secondary tabular-nums">
+        참여 {participants.length} / {maxParticipants}명
       </span>
-      <div className="flex flex-wrap gap-1">
+      <div className="flex flex-wrap gap-1.5">
         {slots.map((_, i) => {
           const participant = participants[i];
           const isMe = participant?.nickname === currentNickname;
@@ -146,12 +149,12 @@ function ParticipantList({
             <span
               key={i}
               className={cn(
-                "text-xs px-2 py-1 rounded-full border transition",
+                "text-xs font-medium px-2.5 py-1 rounded-full border",
                 participant
                   ? isMe
                     ? "bg-accent text-white border-accent"
-                    : "bg-blue-400 text-text-primary border-(--border)"
-                  : "bg-bg text-text-secondary border-dashed border-(--border)",
+                    : "bg-surface-2 text-text-primary border-(--border)"
+                  : "text-text-secondary border-dashed border-(--border)",
               )}
             >
               {participant ? participant.nickname : "대기중"}

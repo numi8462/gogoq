@@ -22,9 +22,9 @@ const ACTION_LABEL: Record<ScheduleAction, string> = {
 };
 
 const CONFIRMED_LABEL: Record<ScheduleAction, string> = {
-  create: "✓ 일정에 추가했어요",
-  update: "✓ 일정을 수정했어요",
-  delete: "✓ 일정을 삭제했어요",
+  create: "일정에 추가했어요",
+  update: "일정을 수정했어요",
+  delete: "일정을 삭제했어요",
 };
 
 export default function ScheduleConfirmCard({
@@ -40,7 +40,7 @@ export default function ScheduleConfirmCard({
   const dateLabel = format(parseISO(attrs.date), "yyyy년 M월 d일");
 
   return (
-    <div className="rounded-xl border border-(--border) bg-surface-2 p-3 flex flex-col gap-2 max-w-[85%]">
+    <div className="rounded-2xl rounded-bl-md border border-(--border) bg-surface-2 p-3.5 flex flex-col gap-2 max-w-[85%]">
       <div className="flex items-center gap-2">
         <span
           className={cn(
@@ -52,7 +52,7 @@ export default function ScheduleConfirmCard({
           {attrs.title}
         </p>
       </div>
-      <p className="text-xs text-text-secondary">
+      <p className="text-xs text-text-secondary tabular-nums">
         {dateLabel} · {attrs.start_time} ~ {attrs.end_time} · 최대{" "}
         {attrs.max_participants}명
       </p>
@@ -96,7 +96,8 @@ export default function ScheduleConfirmCard({
         </div>
       )}
       {status === "confirmed" && (
-        <p className="text-xs text-accent font-medium">
+        <p className="flex items-center gap-1 text-xs text-accent font-semibold">
+          <Check size={14} aria-hidden />
           {CONFIRMED_LABEL[action]}
         </p>
       )}

@@ -3,7 +3,9 @@ import type { Event } from "@/types";
 import {
   buildDemoWeekBoard,
   buildWeekBoard,
+  describeWhen,
   getBoardCaption,
+  nextEventByGroup,
   toBoardEvent,
   type BoardEvent,
 } from "./weekBoard";
@@ -177,5 +179,44 @@ describe("toBoardEvent", () => {
       maxParticipants: 5,
     });
     expect(toBoardEvent(event, new Map()).groupName).toBe("이름 없는 그룹");
+  });
+});
+
+describe("describeWhen", () => {
+  it("오늘과 내일은 그렇게 부른다", () => {
+    expect(describeWhen(new Date("2024-01-10T20:00:00"), WED_NOON)).toBe("오늘 20:00");
+    expect(describeWhen(new Date("2024-01-11T19:30:00"), WED_NOON)).toBe("내일 19:30");
+  });
+
+  it("이번 주 남은 날은 요일로 부른다", () => {
+    expect(describeWhen(new Date("2024-01-13T21:00:00"), WED_NOON)).toBe("토요일 21:00");
+  });
+
+  it("다음 주 이후는 날짜와 요일로 부른다", () => {
+    expect(describeWhen(new Date("2024-01-20T20:00:00"), WED_NOON)).toBe("1월 20일 (토) 20:00");
+  });
+
+  it("일요일 밤의 '내일'은 다음 주 월요일이다", () => {
+    const sundayNight = new Date("2024-01-14T22:00:00");
+    expect(describeWhen(new Date("2024-01-15T20:00:00"), sundayNight)).toBe("내일 20:00");
+  });
+});
+
+describe("nextEventByGroup", () => {
+  it("방마다 끝나지 않은 가장 빠른 일정 하나만 고른다", () => {
+    const events = [
+      ev("g1-later", "2024-01-12T20:00:00", "2024-01-12T22:00:00"),
+      ev("g1-past", "2024-01-09T20:00:00", "2024-01-09T22:00:00"),
+      ev("g1-soon", "2024-01-11T20:00:00", "2024-01-11T22:00:00"),
+      ev("g2-only", "2024-01-13T20:00:00", "2024-01-13T22:00:00", { groupId: "g2" }),
+    ];
+    const map = nextEventByGroup(events, WED_NOON);
+    expect(map.get("g1")?.id).toBe("g1-soon");
+    expect(map.get("g2")?.id).toBe("g2-only");
+  });
+
+  it("진행 중인 일정도 다음 일정으로 본다", () => {
+    const events = [ev("now", "2024-01-10T11:00:00", "2024-01-10T13:00:00")];
+    expect(nextEventByGroup(events, WED_NOON).get("g1")?.id).toBe("now");
   });
 });

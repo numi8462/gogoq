@@ -43,7 +43,7 @@ export default function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
-      className="fixed bottom-4 right-20 z-40 w-10 h-10 rounded-full bg-surface-2 text-text-primary border border-(--border) shadow-md flex items-center justify-center hover:opacity-80 transition"
+      className="fixed bottom-4 right-20 z-40 w-10 h-10 rounded-full bg-surface text-text-secondary hover:text-text-primary border border-(--border) shadow-[0_4px_12px_-4px_rgb(18_8_31/0.25)] flex items-center justify-center transition-[color,transform] duration-150 active:scale-[0.94]"
     >
       {isDark ? <Sun size={18} /> : <Moon size={18} />}
     </button>

@@ -54,12 +54,19 @@ export async function GET(req: NextRequest) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "white",
-            fontSize: "24px",
-            fontWeight: "bold",
           }}
         >
-          Q
+          {/* components/common/Logo.tsx의 QMark와 같은 도형 */}
+          <svg width="34" height="34" viewBox="0 0 64 64">
+            <circle cx="28" cy="28" r="17.5" fill="none" stroke="white" strokeWidth="12" />
+            <path
+              d="M27.5 34.5 43.5 50.5 39.2 54.8 57 57 54.8 39.2 50.5 43.5 34.5 27.5Z"
+              fill="white"
+              stroke="white"
+              strokeWidth="2.5"
+              strokeLinejoin="round"
+            />
+          </svg>
         </div>
         <span
           style={{ color: "#f2f2f0", fontSize: "32px", fontWeight: "bold" }}

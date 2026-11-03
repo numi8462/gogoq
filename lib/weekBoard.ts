@@ -178,3 +178,32 @@ export function getBoardCaption(model: WeekBoardModel, isDemo: boolean): string 
   const when = day.isToday ? "오늘" : `${day.weekday}요일`;
   return `다음 모임 · ${when} ${time} · ${next.title}`;
 }
+
+/**
+ * 일정이 언제인지 날짜 부분만 짧게 말한다.
+ * 오늘/내일은 그대로, 이번 주 안이면 요일, 그 밖이면 날짜로: "오늘", "수요일", "1월 20일 (토)"
+ */
+export function describeDay(start: Date, now: Date): string {
+  if (isSameDay(start, now)) return "오늘";
+  if (isSameDay(start, addDays(now, 1))) return "내일";
+  const sameWeek = isSameDay(getWeekStart(start), getWeekStart(now));
+  if (sameWeek && start > now) return `${weekdayOf(start)}요일`;
+  return `${formatMonthDay(start)} (${weekdayOf(start)})`;
+}
+
+/** 홈 헤드라인용 일정 시각: "오늘 20:00", "수요일 20:00", "1월 20일 (토) 20:00" */
+export function describeWhen(start: Date, now: Date): string {
+  return `${describeDay(start, now)} ${formatTime(start)}`;
+}
+
+/** 방마다 아직 끝나지 않은 가장 빠른 일정. 참여한 방 목록에 "다음 일정"으로 보여준다. */
+export function nextEventByGroup(events: BoardEvent[], now: Date): Map<string, BoardEvent> {
+  const result = new Map<string, BoardEvent>();
+  const upcoming = events
+    .filter((e) => e.end > now)
+    .sort((a, b) => a.start.getTime() - b.start.getTime());
+  for (const event of upcoming) {
+    if (!result.has(event.groupId)) result.set(event.groupId, event);
+  }
+  return result;
+}

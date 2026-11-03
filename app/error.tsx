@@ -22,7 +22,7 @@ export default function Error({
 
   return (
     <main className="min-h-screen bg-bg flex flex-col items-center justify-center px-4 gap-6 text-center">
-      <Logo size="md" />
+      <Logo size="lg" />
       <div>
         <h1 className="text-lg font-bold text-text-primary">
           문제가 발생했어요

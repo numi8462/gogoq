@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Link, Pencil } from "lucide-react";
+import { Check, Link, Pencil } from "lucide-react";
 import CalendarView from "@/components/calendar/CalendarView";
 import EventSidebar from "@/components/calendar/EventSidebar";
 import NicknameModal from "@/components/ui/NicknameModal";
@@ -61,8 +61,11 @@ export default function GroupPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-bg text-text-secondary text-sm">
-        불러오는 중...
+      <div
+        role="status"
+        className="flex items-center justify-center h-screen bg-bg text-text-secondary text-sm motion-safe:animate-pulse"
+      >
+        캘린더를 불러오는 중이에요
       </div>
     );
   }
@@ -72,24 +75,24 @@ export default function GroupPage() {
       <NicknameModal />
 
       {/* 헤더 */}
-      <header className="px-6 py-2 flex items-center justify-between sticky top-0 z-40 backdrop-blur-sm bg-bg/80 border-b border-(--border)">
+      <header className="px-4 sm:px-6 h-14 flex items-center justify-between gap-3 sticky top-0 z-40 backdrop-blur-md bg-bg/80 border-b border-(--border)">
         <div className="flex items-center gap-2 min-w-0">
           <Logo size="sm" />
           {groupName && (
             <>
-              <span className="text-text-secondary text-sm">·</span>
-              <p className="text-sm font-medium text-text-primary truncate">
+              <span aria-hidden className="h-4 w-px bg-(--border)" />
+              <h1 className="text-base font-semibold tracking-[-0.01em] text-text-primary truncate">
                 {groupName}
-              </p>
+              </h1>
             </>
           )}
           {user && creatorId === user.id && (
             <button
               onClick={() => setIsEditingName(true)}
               aria-label="그룹 이름 수정"
-              className="text-text-secondary hover:text-text-primary p-1 rounded-lg hover:bg-accent transition shrink-0"
+              className="text-text-secondary hover:text-text-primary p-1.5 rounded-lg hover:bg-surface-2 transition-colors shrink-0"
             >
-              <Pencil size={12} />
+              <Pencil size={14} />
             </button>
           )}
         </div>
@@ -98,15 +101,19 @@ export default function GroupPage() {
             variant="ghost"
             size="sm"
             onClick={handleCopy}
-            className="flex items-center shrink-0"
+            className="flex items-center gap-1.5 shrink-0"
           >
-            <Link size={14} className="mr-1.5" />
-            {copied ? "복사됨 ✓" : "초대 링크"}
+            {copied ? (
+              <Check size={14} className="text-accent" />
+            ) : (
+              <Link size={14} />
+            )}
+            <span aria-live="polite">{copied ? "복사했어요" : "초대 링크"}</span>
           </Button>
         )}
       </header>
 
-      <main className="max-w-7xl mx-auto p-4 overflow-hidden grid grid-cols-1 md:grid-cols-[1fr_320px] gap-4">
+      <main className="max-w-7xl mx-auto p-4 sm:p-6 overflow-hidden grid grid-cols-1 md:grid-cols-[1fr_320px] gap-6">
         <div className="h-full">
           <CalendarView
             events={events}

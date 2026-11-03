@@ -44,7 +44,7 @@ const PALETTE_VARS = [
   "--color-accent",
   "--color-bg",
 ] as const;
-const LIGHT_DEFAULTS = ["#e0e0dd", "#c9d4c9", "#ff6b4a", "#ff4696", "#f7f7f5"];
+const LIGHT_DEFAULTS = ["#dccfe6", "#ffb3d1", "#ff6b4a", "#ff4696", "#f8f6fa"];
 
 let paletteCache: string | null = null;
 

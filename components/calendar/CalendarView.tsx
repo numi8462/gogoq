@@ -148,14 +148,14 @@ export default function CalendarView({ events, selectedDate, onDateSelect }: Pro
           <ChevronLeft size={18} />
         </button>
         <div className="flex items-center gap-2">
-          <h2 id={titleId} className="text-base font-semibold text-text-primary tabular-nums">
+          <h2 id={titleId} className="text-lg font-bold tracking-[-0.02em] text-text-primary tabular-nums sm:text-xl">
             {monthTitle(month)}
           </h2>
           {!isSameMonth(month, now) && (
             <button
               type="button"
               onClick={goToToday}
-              className="text-xs rounded-full px-2 py-0.5 border border-(--border) text-text-secondary hover:text-text-primary transition"
+              className="text-xs font-medium rounded-full px-2.5 py-1 border border-(--border) text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors active:scale-[0.96]"
             >
               오늘
             </button>
@@ -177,7 +177,7 @@ export default function CalendarView({ events, selectedDate, onDateSelect }: Pro
 
       <div
         aria-hidden
-        className="mb-1.5 grid grid-cols-7 gap-1.5 text-center text-xs text-text-secondary sm:gap-2"
+        className="mb-1.5 grid grid-cols-7 gap-1.5 text-center text-xs font-medium text-text-secondary sm:gap-2"
       >
         {WEEKDAYS.map((weekday) => (
           <span key={weekday}>{weekday}</span>

@@ -266,7 +266,7 @@ export default function WeekBoardView({
           id={panelId}
           role="region"
           aria-label={`${dayName(panelDay, isDemo)} 일정`}
-          className="mt-3 rounded-2xl p-4 bg-surface/50 border border-(--border) text-left"
+          className="mt-3 rounded-2xl p-4 bg-surface border border-(--border) text-left transition-[opacity,translate] duration-200 starting:opacity-0 starting:-translate-y-1"
         >
           <div className="flex items-center justify-between gap-2">
             <p className="text-sm font-semibold text-text-primary">
