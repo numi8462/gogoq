@@ -1,23 +1,24 @@
 @import "tailwindcss";
 
+/* 사이트는 다크 테마 하나만 쓴다. 보라 배경(#1E1033) 위의 보드 세계. */
 @theme {
-  --color-bg: #f8f6fa;
-  --color-surface: #ffffff;
-  --color-surface-2: #eeeaf2;
+  --color-bg: #1e1033;
+  --color-surface: #27163f;
+  --color-surface-2: #33204f;
   --color-accent: #ff4696;
-  --color-accent-hover: #e0257a;
-  --color-accent-secondary: #ff6b4a;
-  --color-tile-default: #dccfe6;
-  --color-tile-scheduled: #ffb3d1;
+  --color-accent-hover: #ff74b0;
+  --color-accent-secondary: #ff8a6b;
+  --color-tile-default: #4b3869;
+  --color-tile-scheduled: #8a3a78;
   /* 그룹 캘린더 칸(보드 타일). edge는 테두리와 타일 아래 두께로 쓴다. */
-  --color-cell: #ddd0e5;
-  --color-cell-edge: #bfa8ca;
-  --color-cell-scheduled: #ffc4da;
-  --color-cell-scheduled-edge: #e58db1;
-  --color-text-primary: #1d1a24;
-  --color-text-secondary: #6a6475;
-  --color-danger: #dc2626;
-  --color-success: #15803d;
+  --color-cell: #2c1b4a;
+  --color-cell-edge: #150a27;
+  --color-cell-scheduled: #4a2156;
+  --color-cell-scheduled-edge: #250f30;
+  --color-text-primary: #f4f1f8;
+  --color-text-secondary: #ab9fc2;
+  --color-danger: #f87171;
+  --color-success: #4ade80;
   --font-sans: "Pretendard Variable", "Pretendard", ui-sans-serif, system-ui, sans-serif;
 
   /* 모든 transition의 기본 곡선. 처음에 빠르게 반응하고 부드럽게 멈추는 ease-out. */
@@ -45,73 +46,6 @@
 }
 
 :root {
-  --border: #e4dfe9;
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #1e1033;
-    --color-surface: #27163f;
-    --color-surface-2: #33204f;
-    --color-accent: #ff4696;
-    --color-accent-hover: #ff74b0;
-    --color-accent-secondary: #ff8a6b;
-    --color-tile-default: #4b3869;
-    --color-tile-scheduled: #8a3a78;
-    --color-cell: #2c1b4a;
-    --color-cell-edge: #150a27;
-    --color-cell-scheduled: #4a2156;
-    --color-cell-scheduled-edge: #250f30;
-    --color-text-primary: #f4f1f8;
-    --color-text-secondary: #ab9fc2;
-    --color-danger: #f87171;
-    --color-success: #4ade80;
-    --border: #3a2858;
-    color-scheme: dark;
-  }
-}
-
-/* 수동 토글 오버라이드 — 시스템 설정보다 우선 적용 (JS가 <html>에 클래스로 표시) */
-html.light {
-  --color-bg: #f8f6fa;
-  --color-surface: #ffffff;
-  --color-surface-2: #eeeaf2;
-  --color-accent: #ff4696;
-  --color-accent-hover: #e0257a;
-  --color-accent-secondary: #ff6b4a;
-  --color-tile-default: #dccfe6;
-  --color-tile-scheduled: #ffb3d1;
-  /* 그룹 캘린더 칸(보드 타일). edge는 테두리와 타일 아래 두께로 쓴다. */
-  --color-cell: #ddd0e5;
-  --color-cell-edge: #bfa8ca;
-  --color-cell-scheduled: #ffc4da;
-  --color-cell-scheduled-edge: #e58db1;
-  --color-text-primary: #1d1a24;
-  --color-text-secondary: #6a6475;
-  --color-danger: #dc2626;
-  --color-success: #15803d;
-  --border: #e4dfe9;
-  color-scheme: light;
-}
-
-html.dark {
-  --color-bg: #1e1033;
-  --color-surface: #27163f;
-  --color-surface-2: #33204f;
-  --color-accent: #ff4696;
-  --color-accent-hover: #ff74b0;
-  --color-accent-secondary: #ff8a6b;
-  --color-tile-default: #4b3869;
-  --color-tile-scheduled: #8a3a78;
-  --color-cell: #2c1b4a;
-  --color-cell-edge: #150a27;
-  --color-cell-scheduled: #4a2156;
-  --color-cell-scheduled-edge: #250f30;
-  --color-text-primary: #f4f1f8;
-  --color-text-secondary: #ab9fc2;
-  --color-danger: #f87171;
-  --color-success: #4ade80;
   --border: #3a2858;
   color-scheme: dark;
 }

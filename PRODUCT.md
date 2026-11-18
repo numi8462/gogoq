@@ -37,7 +37,7 @@ web
 
 - Next.js App Router, React, TypeScript, Tailwind CSS 4, Supabase(Auth, DB, Realtime), TanStack Query.
 - 화면 문구는 한국어.
-- 라이트/다크 테마를 지원하고, 사용자가 직접 전환할 수 있다.
+- 다크 테마 하나만 쓴다 (보라 배경 위의 보드).
 - 참여는 닉네임 기준이라 계정과 연결되어 있지 않다.
 - AI 결과는 바로 저장하지 않고 확인 카드에서 승인해야 반영된다.
 

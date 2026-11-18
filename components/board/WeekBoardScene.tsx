@@ -36,7 +36,7 @@ type Props = {
 
 // ── 테마 색과 동작 줄이기 설정 ──
 // 3D 장면에서만 쓰므로, 홈 첫 로딩(하이드레이션) 때가 아니라 이 파일이 늦게 로드된 뒤에 읽는다.
-// 테마는 ThemeToggle과 같은 방식으로 <html> 클래스와 시스템 설정 변화를 구독한다.
+// 사이트는 다크 테마 하나라 색이 바뀌지 않으므로 처음 한 번만 읽는다.
 const PALETTE_VARS = [
   "--color-tile-default",
   "--color-tile-scheduled",
@@ -44,39 +44,23 @@ const PALETTE_VARS = [
   "--color-accent",
   "--color-bg",
 ] as const;
-const LIGHT_DEFAULTS = ["#dccfe6", "#ffb3d1", "#ff6b4a", "#ff4696", "#f8f6fa"];
+const PALETTE_DEFAULTS = ["#4b3869", "#8a3a78", "#ff8a6b", "#ff4696", "#1e1033"];
 
 let paletteCache: string | null = null;
 
-function subscribeTheme(callback: () => void) {
-  const onChange = () => {
-    paletteCache = null;
-    callback();
-  };
-  const mql = window.matchMedia("(prefers-color-scheme: dark)");
-  const observer = new MutationObserver(onChange);
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-  mql.addEventListener("change", onChange);
-  return () => {
-    mql.removeEventListener("change", onChange);
-    observer.disconnect();
-  };
-}
+const subscribePalette = () => () => {};
 
 function getPaletteSnapshot() {
   if (paletteCache === null) {
     const style = getComputedStyle(document.documentElement);
     paletteCache = PALETTE_VARS.map(
-      (name, i) => style.getPropertyValue(name).trim() || LIGHT_DEFAULTS[i],
+      (name, i) => style.getPropertyValue(name).trim() || PALETTE_DEFAULTS[i],
     ).join("|");
   }
   return paletteCache;
 }
 
-const getPaletteServerSnapshot = () => LIGHT_DEFAULTS.join("|");
+const getPaletteServerSnapshot = () => PALETTE_DEFAULTS.join("|");
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -654,7 +638,7 @@ export default function WeekBoardScene({
   const onReadyRef = useRef(onReady);
 
   const paletteKey = useSyncExternalStore(
-    subscribeTheme,
+    subscribePalette,
     getPaletteSnapshot,
     getPaletteServerSnapshot,
   );

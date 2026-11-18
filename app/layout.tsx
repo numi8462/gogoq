@@ -4,9 +4,8 @@ import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 import { Bowlby_One } from "next/font/google";
 import Providers from "./providers";
-import ThemeToggle from "@/components/common/ThemeToggle";
 import Toaster from "@/components/common/Toaster";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 // 로고 워드마크("gogo")용 디스플레이 폰트. next/font가 빌드 시 받아서 자체 호스팅한다.
 const bowlbyOne = Bowlby_One({
@@ -15,8 +14,6 @@ const bowlbyOne = Bowlby_One({
   display: "swap",
   variable: "--font-bowlby-one",
 });
-
-const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.classList.add(t);}}catch(e){}})();`;
 
 export const metadata: Metadata = {
   title: {
@@ -43,21 +40,21 @@ export const metadata: Metadata = {
   },
 };
 
+// 다크 테마만 쓰므로 모바일 브라우저 주소창과 기본 UI도 같은 보라색과 다크 스킴으로 맞춘다.
+export const viewport: Viewport = {
+  themeColor: "#1e1033",
+  colorScheme: "dark",
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    // THEME_INIT_SCRIPT가 hydration 전에 <html>에 light/dark 클래스를 붙이므로
-    // 서버 HTML과 className이 달라지는 게 의도된 동작이다. <html> 한 단계만 경고를 끈다.
-    <html lang="ko" className={bowlbyOne.variable} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-      </head>
+    <html lang="ko" className={bowlbyOne.variable}>
       <body>
         <Providers>{children}</Providers>
-        <ThemeToggle />
         <Toaster />
       </body>
     </html>
