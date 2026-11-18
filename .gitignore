@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI 디자인 스킬(impeccable, Emil Kowalski) 설치 파일과 도구별 설정
+.agents/
+.aider-desk/
+.codex/
+.github/agents/
+.github/hooks/
+.github/skills/
+skills-lock.json
+
+# impeccable 검토용 스크린샷 (디자인 방향 문서 .impeccable/surfaces/는 커밋한다)
+.impeccable/review/
