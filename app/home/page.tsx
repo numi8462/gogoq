@@ -33,20 +33,22 @@ export default function HomePage() {
   const router = useRouter();
   const { user, isLoading: isUserLoading } = useUser();
   const { data: myGroups = [], isPending: isMyGroupsPending } = useMyGroups(user?.id);
-  // 보여줄 내 방이 있으면 실제 이번 주 일정, 없으면(게스트 포함) 예시 보드
-  const boardMode =
-    isUserLoading || (user && isMyGroupsPending)
-      ? "loading"
-      : user && myGroups.length > 0
-        ? "live"
-        : "demo";
-  // 참여한 방이 있으면 첫 화면 보드에 실제 상태(참여한 방, 이번 주, 다음 모임)를 놓는다.
-  // 이번 주 일정은 아래 3D 보드(HomeWeekBoard)와 같은 쿼리라 한 번만 불러온다.
-  const isLive = boardMode === "live";
   const [now] = useState(() => new Date());
   const weekStart = useMemo(() => getWeekStart(now), [now]);
   const groupIds = useMemo(() => myGroups.map((g) => g.id).sort(), [myGroups]);
-  const eventsQuery = useWeekBoardEvents(isLive ? groupIds : NO_IDS, weekStart);
+  // 이번 주 일정은 방 목록이 오는 즉시 요청한다(로그인 확인 응답을 기다리지 않는다).
+  // 아래 3D 보드(HomeWeekBoard)와 같은 쿼리라 한 번만 불러온다.
+  const eventsQuery = useWeekBoardEvents(user ? groupIds : NO_IDS, weekStart);
+
+  // 로그인 확인, 참여한 방, 이번 주 일정이 모두 준비된 뒤에 한 번에 그린다.
+  // 하나씩 도착할 때마다 버튼 → 방 목록 → 다음 모임 순으로 화면이 바뀌지 않게 하기 위함이다.
+  const isReady =
+    !isUserLoading &&
+    (!user || (!isMyGroupsPending && (myGroups.length === 0 || !eventsQuery.isPending)));
+  // 보여줄 내 방이 있으면 실제 이번 주 일정, 없으면(게스트 포함) 예시 보드
+  const boardMode = !isReady ? "loading" : user && myGroups.length > 0 ? "live" : "demo";
+  // 참여한 방이 있으면 첫 화면 보드에 실제 상태(참여한 방, 이번 주, 다음 모임)를 놓는다.
+  const isLive = boardMode === "live";
   const liveEvents = useMemo(() => {
     if (!eventsQuery.data) return eventsQuery.isError ? [] : null;
     const nameById = new Map(myGroups.map((g) => [g.id, g.name || "이름 없는 그룹"]));
@@ -150,8 +152,11 @@ export default function HomePage() {
     <div className="min-h-screen overflow-x-clip bg-bg">
       <header className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:h-20 sm:px-6">
         <Logo size="md" />
-        {!isUserLoading &&
-          (user ? (
+        {/* 준비되기 전에는 버튼 크기만큼 자리를 비워둬서, 나타날 때 레이아웃이 움직이지 않게 한다. */}
+        {!isReady ? (
+          <span aria-hidden className="h-10 w-24" />
+        ) : (
+          user ? (
             <Button
               variant="secondary"
               size="sm"
@@ -164,7 +169,8 @@ export default function HomePage() {
             <Button variant="secondary" size="sm" onClick={() => router.push("/login")}>
               로그인
             </Button>
-          ))}
+          )
+        )}
       </header>
 
       <main>
